@@ -59,3 +59,18 @@ export async function submitJobApplication(data: Record<string, unknown>): Promi
     return { ok: false, error: "حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى." }
   }
 }
+
+export async function submitLead(data: Record<string, unknown>): Promise<ActionResult> {
+  try {
+    const payload = await getPayloadClient()
+    await payload.create({
+      collection: "leads",
+      data: data as any,
+    })
+    return { ok: true }
+  } catch (err) {
+    console.error("[v0] submitLead error", err)
+    return { ok: false, error: "حدث خطأ أثناء معالجة الطلب. حاول مرة أخرى." }
+  }
+}
+

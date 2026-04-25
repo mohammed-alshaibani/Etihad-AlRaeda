@@ -6,8 +6,10 @@ import config from "@payload-config"
 import { handleServerFunctions, RootLayout } from "@payloadcms/next/layouts"
 import type React from "react"
 
-import { importMap } from "./admin/importMap.js"
+import "@/app/globals.css"
+import "@payloadcms/next/css"
 import "@payloadcms/ui/styles.css"
+import { importMap } from "./admin/importMap.js"
 import "./custom.css"
 
 type Args = {

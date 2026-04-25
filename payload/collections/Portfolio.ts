@@ -1,6 +1,13 @@
 import type { CollectionConfig } from "payload"
 import { lexicalEditor } from "@payloadcms/richtext-lexical"
 
+const toSlug = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "")
+
 export const Portfolio: CollectionConfig = {
   slug: "portfolio",
   admin: {
@@ -13,6 +20,16 @@ export const Portfolio: CollectionConfig = {
     plural: { ar: "أعمالنا", en: "Portfolio" },
   },
   access: { read: () => true },
+  hooks: {
+    beforeValidate: [
+      ({ data, operation }) => {
+        if (operation === "create" && data?.title && !data?.slug) {
+          data.slug = toSlug(typeof data.title === "object" ? (data.title.ar || data.title.en || "") : data.title)
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: "title",

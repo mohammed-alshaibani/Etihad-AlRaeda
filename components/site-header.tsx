@@ -23,6 +23,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { BrandLogo } from "@/components/brand-logo"
 import { mainNav } from "@/lib/navigation"
+import { CartDrawer } from "@/components/shop/cart-drawer"
+import { GlobalSearch } from "@/components/global-search"
+
+
 
 export function SiteHeader() {
   const pathname = usePathname()
@@ -146,23 +150,28 @@ export function SiteHeader() {
           </nav>
 
           {/* CTA cluster */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            <div className="hidden lg:block mr-2">
+               <GlobalSearch />
+            </div>
             <Button
+
               asChild
               variant="ghost"
               className="hidden text-foreground hover:bg-foreground/10 hover:text-foreground md:inline-flex"
             >
-              <Link href="/quote">طلب عرض سعر</Link>
+              <Link href="/request-quote">طلب عرض سعر</Link>
             </Button>
             <Button
               asChild
               className="hidden bg-primary text-primary-foreground shadow-premium hover:bg-primary/90 md:inline-flex"
             >
-              <Link href="/store">
+              <Link href="/shop">
                 متجرنا
                 <ArrowLeft className="mr-1.5 h-4 w-4" />
               </Link>
             </Button>
+            <CartDrawer />
 
             {/* Mobile */}
             <Sheet>
@@ -228,8 +237,9 @@ export function SiteHeader() {
                       asChild
                       className="bg-primary text-primary-foreground hover:bg-primary/90"
                     >
-                      <Link href="/store">متجرنا</Link>
+                      <Link href="/shop">متجرنا</Link>
                     </Button>
+
                     <Button
                       asChild
                       variant="outline"

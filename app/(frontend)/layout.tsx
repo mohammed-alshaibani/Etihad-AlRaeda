@@ -6,6 +6,8 @@ import "../globals.css"
 
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
+import { CartProvider } from "@/hooks/use-cart"
+
 
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
@@ -71,11 +73,14 @@ export default function RootLayout({
         >
           تخطي إلى المحتوى الرئيسي
         </a>
-        <SiteHeader />
-        <main id="main" className="min-h-[70vh]">
-          <Suspense fallback={null}>{children}</Suspense>
-        </main>
-        <SiteFooter />
+        <CartProvider>
+          <SiteHeader />
+          <main id="main" className="min-h-[70vh]">
+            <Suspense fallback={null}>{children}</Suspense>
+          </main>
+          <SiteFooter />
+        </CartProvider>
+
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>

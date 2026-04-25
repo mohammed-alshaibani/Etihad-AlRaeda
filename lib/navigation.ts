@@ -36,9 +36,10 @@ export const mainNav: UnifiedNavItem[] = [
     ]
   },
   { label: "مشاريعنا", href: "/portfolio" },
-  { label: "شركاؤنا", href: "/partners" },
+  { label: "المتجر", href: "/shop" },
   { label: "المدونة", href: "/blog" },
   { label: "تواصل معنا", href: "/contact" },
+
 ]
 
 export const megaNav: NavGroup[] = [
@@ -56,9 +57,10 @@ export const megaNav: NavGroup[] = [
     items: [
       { label: "خدماتنا", href: "/services", description: "جميع خدمات الأعمال" },
       { label: "أعمالنا", href: "/portfolio", description: "دراسات حالة ومشاريع" },
-      { label: "العروض والخصومات", href: "/offers", description: "باقات مؤسسية حصرية" },
+      { label: "المتجر الإلكتروني", href: "/shop", description: "باقات خدمات جاهزة" },
       { label: "مكتبة الملفات", href: "/library", description: "كتالوجات ومواصفات فنية" },
     ],
+
   },
   {
     label: "الدعم",
@@ -66,8 +68,10 @@ export const megaNav: NavGroup[] = [
       { label: "الأسئلة الشائعة", href: "/faq", description: "إجابات سريعة لاستفساراتك" },
       { label: "آراء العملاء", href: "/testimonials", description: "قصص نجاح حقيقية" },
       { label: "حجز موعد", href: "/book-appointment", description: "استشارة مع خبير" },
+      { label: "بوابة العملاء", href: "/account", description: "متابعة الطلبات والعروض" },
       { label: "تواصل معنا", href: "/contact", description: "مكاتبنا ومعلومات الاتصال" },
     ],
+
   },
 ]
 
@@ -101,10 +105,11 @@ export const footerNav: NavGroup[] = [
   {
     label: "تواصل وشؤون قانونية",
     items: [
-      { label: "طلب عرض سعر", href: "/quote" },
-      { label: "حجز موعد", href: "/book-appointment" },
+      { label: "طلب عرض سعر", href: "/request-quote" },
+      { label: "بوابة العملاء", href: "/account" },
       { label: "سياسة الخصوصية", href: "/privacy" },
       { label: "الشروط والأحكام", href: "/terms" },
     ],
   },
+
 ]

@@ -1,6 +1,13 @@
 import type { CollectionConfig } from "payload"
 import { lexicalEditor } from "@payloadcms/richtext-lexical"
 
+const toSlug = (str: string) =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w-]/g, "")
+
 export const Services: CollectionConfig = {
   slug: "services",
   admin: {
@@ -13,6 +20,16 @@ export const Services: CollectionConfig = {
     plural: { ar: "الخدمات", en: "Services" },
   },
   access: { read: () => true },
+  hooks: {
+    beforeValidate: [
+      ({ data, operation }) => {
+        if (operation === "create" && data?.title && !data?.slug) {
+          data.slug = toSlug(typeof data.title === "object" ? (data.title.ar || data.title.en || "") : data.title)
+        }
+        return data
+      },
+    ],
+  },
   fields: [
     {
       name: "title",
@@ -100,7 +117,26 @@ export const Services: CollectionConfig = {
       admin: { description: 'مثال: "15,000 ر.س"' },
     },
     {
+      name: "inventory",
+      type: "number",
+      label: { ar: "المخزون / السعة المتاحة", en: "Inventory / Capacity" },
+      admin: { description: "اتركه فارغاً للسعة غير المحدودة" },
+    },
+    {
+      name: "outOfStock",
+      type: "checkbox",
+      defaultValue: false,
+      label: { ar: "نفذت الكمية", en: "Out of Stock" },
+    },
+    {
+      name: "gallery",
+      type: "array",
+      label: { ar: "معرض الصور", en: "Image Gallery" },
+      fields: [{ name: "image", type: "upload", relationTo: "media", required: true }],
+    },
+    {
       name: "duration",
+
       type: "text",
       localized: true,
       label: { ar: "المدة المتوقعة", en: "Duration" },
