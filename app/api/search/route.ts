@@ -1,44 +1,67 @@
 import { NextResponse } from "next/server"
-import { getPayloadClient } from "@/lib/payload"
+import { getPayload } from "payload"
+import config from "@payload-config"
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const query = searchParams.get("q")
-
-  if (!query || query.length < 2) {
-    return NextResponse.json({ results: [] })
-  }
-
+export async function GET(request: Request) {
   try {
-    const payload = await getPayloadClient()
+    const { searchParams } = new URL(request.url)
+    const q = searchParams.get("q")
 
-    const [products, services, posts] = await Promise.all([
-      payload.find({
-        collection: "products",
-        where: { or: [{ name: { contains: query } }, { tagline: { contains: query } }] },
-        limit: 5,
-      }),
-      payload.find({
-        collection: "services",
-        where: { or: [{ name: { contains: query } }, { description: { contains: query } }] },
-        limit: 5,
-      }),
-      payload.find({
-        collection: "posts",
-        where: { or: [{ title: { contains: query } }, { summary: { contains: query } }] },
-        limit: 5,
-      }),
-    ])
+    if (!q || q.length < 2) {
+      return NextResponse.json({ products: [], posts: [] })
+    }
 
-    const results = [
-      ...products.docs.map((p: any) => ({ id: p.id, title: p.name, type: "product", href: `/shop/${p.slug}` })),
-      ...services.docs.map((s: any) => ({ id: s.id, title: s.name, type: "service", href: `/services/${s.slug}` })),
-      ...posts.docs.map((post: any) => ({ id: post.id, title: post.title, type: "post", href: `/blog/${post.slug}` })),
-    ]
+    const payload = await getPayload({ config })
 
-    return NextResponse.json({ results })
-  } catch (err) {
-    console.error("[Search] error:", err)
-    return NextResponse.json({ results: [] })
+    // Query Products
+    const productsRes = await payload.find({
+      collection: "products",
+      where: {
+        or: [
+          { title: { like: q } },
+          { "title.ar": { like: q } },
+          { "title.en": { like: q } },
+        ],
+      },
+      limit: 5,
+    })
+
+    // Query Posts
+    const postsRes = await payload.find({
+      collection: "posts",
+      where: {
+        and: [
+          { status: { equals: "published" } },
+          {
+            or: [
+              { title: { like: q } },
+              { "title.ar": { like: q } },
+              { "title.en": { like: q } },
+            ],
+          },
+        ]
+      },
+      limit: 5,
+    })
+
+    const results = {
+      products: productsRes.docs.map((p) => ({
+        id: p.id,
+        title: typeof p.title === "object" ? p.title?.ar || p.title?.en : p.title,
+        slug: p.slug,
+        type: "product",
+      })),
+      posts: postsRes.docs.map((p) => ({
+        id: p.id,
+        title: typeof p.title === "object" ? p.title?.ar || p.title?.en : p.title,
+        slug: p.slug,
+        type: "post",
+      })),
+    }
+
+    return NextResponse.json(results)
+  } catch (error) {
+    console.error("Search API Error:", error)
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }

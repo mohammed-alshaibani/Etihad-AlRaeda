@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 import { Check, Loader2, ShoppingBag, AlertCircle, CreditCard, Building, ArrowLeft } from "lucide-react"
 
 
-import { useCart } from "@/hooks/use-cart"
+import { useCart, useCartTotals } from "@/hooks/use-cart"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -46,7 +46,8 @@ const paymentMethods = [
 
 export default function CheckoutPage() {
   const router = useRouter()
-  const { items, subtotal, vat, total, clearCart } = useCart()
+  const { items, clearCart } = useCart()
+  const { subtotal, vat, total } = useCartTotals()
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -81,7 +82,7 @@ export default function CheckoutPage() {
 
       if (result.ok) {
         clearCart()
-        router.push(`/checkout/success?orderNumber=${result.orderNumber}`)
+        router.push(`/invoice/${result.orderNumber}`)
       } else {
         setError(result.error)
       }

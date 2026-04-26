@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { footerNav } from "@/lib/navigation"
 
-export function SiteFooter() {
+export function SiteFooter({ navigation, settings }: { navigation?: any, settings?: any }) {
   return (
     <footer className="bg-background text-foreground">
       {/* CTA banner */}
@@ -52,34 +52,34 @@ export function SiteFooter() {
           <ul className="mt-6 space-y-3 text-sm text-foreground/75">
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-              <span>طريق الملك فهد، حي العليا، الرياض 12214، المملكة العربية السعودية</span>
+              <span>{settings?.contact?.address || "طريق الملك فهد، حي العليا، الرياض 12214، المملكة العربية السعودية"}</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone className="h-4 w-4 shrink-0 text-primary" />
-              <a href="tel:+966110000000" className="hover:text-foreground" dir="ltr">
-                +966 11 000 0000
+              <a href={`tel:${settings?.contact?.phone || "+966110000000"}`} className="hover:text-foreground" dir="ltr">
+                {settings?.contact?.phone || "+966 11 000 0000"}
               </a>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="h-4 w-4 shrink-0 text-primary" />
-              <a href="mailto:info@etihad.sa" className="hover:text-foreground">
-                info@etihad.sa
+              <a href={`mailto:${settings?.contact?.email || "info@etihad.sa"}`} className="hover:text-foreground">
+                {settings?.contact?.email || "info@etihad.sa"}
               </a>
             </li>
           </ul>
         </div>
 
-        {footerNav.map((group) => (
+        {(navigation?.footerColumns || footerNav).map((group: any, idx: number) => (
           <nav
-            key={group.label}
-            aria-label={group.label}
+            key={group.title || group.label || idx}
+            aria-label={group.title || group.label}
             className="md:col-span-2"
           >
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-              {group.label}
+              {group.title || group.label}
             </p>
             <ul className="mt-4 space-y-2.5">
-              {group.items.map((item) => (
+              {(group.links || group.items)?.map((item: any) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -138,43 +138,63 @@ export function SiteFooter() {
             © {new Date().getFullYear()} شركة اتحاد الرائدة لإدارة المرافق. جميع الحقوق محفوظة.
           </p>
           <div className="flex items-center gap-4 text-xs text-foreground/60">
-            <Link href="/privacy" className="hover:text-foreground">
-              سياسة الخصوصية
-            </Link>
-            <span className="text-foreground/20">·</span>
-            <Link href="/terms" className="hover:text-foreground">
-              الشروط والأحكام
-            </Link>
-            <span className="text-foreground/20">·</span>
+            {navigation?.footerBottom?.legalLinks?.map((link: any, idx: number) => (
+              <div key={idx} className="flex items-center gap-4">
+                <Link href={link.url} className="hover:text-foreground">
+                  {link.label}
+                </Link>
+                {idx < (navigation.footerBottom.legalLinks.length - 1) && (
+                  <span className="text-foreground/20">·</span>
+                )}
+              </div>
+            )) || (
+                <>
+                  <Link href="/privacy" className="hover:text-foreground">
+                    سياسة الخصوصية
+                  </Link>
+                  <span className="text-foreground/20">·</span>
+                  <Link href="/terms" className="hover:text-foreground">
+                    الشروط والأحكام
+                  </Link>
+                </>
+              )}
+            <span className="text-foreground/20 hidden md:block">·</span>
             <div className="flex items-center gap-3">
-              <a
-                href="#"
-                aria-label="لينكد إن"
-                className="text-foreground/60 transition hover:text-primary"
-              >
-                <Linkedin className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="تويتر"
-                className="text-foreground/60 transition hover:text-primary"
-              >
-                <Twitter className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="فيسبوك"
-                className="text-foreground/60 transition hover:text-primary"
-              >
-                <Facebook className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="يوتيوب"
-                className="text-foreground/60 transition hover:text-primary"
-              >
-                <Youtube className="h-4 w-4" />
-              </a>
+              {settings?.social?.linkedin && (
+                <a href={settings.social.linkedin} aria-label="لينكد إن" className="text-foreground/60 transition hover:text-primary">
+                  <Linkedin className="h-4 w-4" />
+                </a>
+              )}
+              {settings?.social?.twitter && (
+                <a href={settings.social.twitter} aria-label="تويتر" className="text-foreground/60 transition hover:text-primary">
+                  <Twitter className="h-4 w-4" />
+                </a>
+              )}
+              {settings?.social?.facebook && (
+                <a href={settings.social.facebook} aria-label="فيسبوك" className="text-foreground/60 transition hover:text-primary">
+                  <Facebook className="h-4 w-4" />
+                </a>
+              )}
+              {settings?.social?.youtube && (
+                <a href={settings.social.youtube} aria-label="يوتيوب" className="text-foreground/60 transition hover:text-primary">
+                  <Youtube className="h-4 w-4" />
+                </a>
+              )}
+              {settings?.social?.instagram && (
+                <a href={settings.social.instagram} aria-label="انستجرام" className="text-foreground/60 transition hover:text-primary">
+                  <Linkedin className="h-4 w-4" /> {/* Fallback icon */}
+                </a>
+              )}
+              {(!settings?.social || Object.keys(settings.social).length === 0) && (
+                <>
+                  <a href="#" aria-label="لينكد إن" className="text-foreground/60 transition hover:text-primary">
+                    <Linkedin className="h-4 w-4" />
+                  </a>
+                  <a href="#" aria-label="تويتر" className="text-foreground/60 transition hover:text-primary">
+                    <Twitter className="h-4 w-4" />
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

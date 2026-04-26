@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowLeft, Calendar, Newspaper, FileText, Tag } from "lucide-react"
 
-const articles = [
+const defaultArticles = [
   {
     tag: "رؤى قطاعية",
     date: "12 أبريل 2026",
@@ -25,7 +25,20 @@ const articles = [
   },
 ]
 
-export function InsightsSection() {
+export function InsightsSection({ data }: { data?: any[] }) {
+  const articles = data && data.length > 0 ? data.map(post => {
+    const pubDate = new Date(post.publishedAt || post.createdAt);
+    const dateStr = pubDate.toLocaleDateString('ar-SA', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    return {
+      tag: post.category || "مقالة",
+      date: dateStr,
+      title: post.title,
+      href: `/blog/${post.slug}`,
+      icon: Newspaper,
+    }
+  }) : defaultArticles;
+
   return (
     <section className="bg-muted py-20 md:py-28">
       <div className="mx-auto max-w-7xl container-px">
@@ -61,12 +74,12 @@ export function InsightsSection() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {articles.map((article) => {
+          {articles.map((article: any, i: number) => {
             const Icon = article.icon
             return (
               <Link
-                key={article.href}
-                href={article.href}
+                key={article.href || i}
+                href={article.href || "#"}
                 className="group flex flex-col rounded-2xl border border-border bg-background p-7 transition hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-premium"
               >
                 <div className="flex items-center justify-between">
@@ -94,3 +107,4 @@ export function InsightsSection() {
     </section>
   )
 }
+

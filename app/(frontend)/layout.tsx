@@ -4,11 +4,11 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "../globals.css"
 
+import { getPayload } from "payload"
+import config from "@payload-config"
+
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
-import { CartProvider } from "@/hooks/use-cart"
-
-
 const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
   weight: ["300", "400", "500", "700", "800"],
@@ -54,11 +54,21 @@ export const viewport: Viewport = {
   initialScale: 1,
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const payload = await getPayload({ config })
+
+  const navigation = await payload.findGlobal({
+    slug: "navigation",
+  }).catch(() => null)
+
+  const siteSettings = await payload.findGlobal({
+    slug: "site-settings",
+  }).catch(() => null)
+
   return (
     <html
       lang="ar"
@@ -73,15 +83,11 @@ export default function RootLayout({
         >
           تخطي إلى المحتوى الرئيسي
         </a>
-        <CartProvider>
-          <SiteHeader />
-          <main id="main" className="min-h-[70vh]">
-            <Suspense fallback={null}>{children}</Suspense>
-          </main>
-          <SiteFooter />
-        </CartProvider>
-
-        {process.env.NODE_ENV === "production" && <Analytics />}
+        <SiteHeader navigation={navigation} />
+        <main id="main" className="min-h-[70vh]">
+          <Suspense fallback={null}>{children}</Suspense>
+        </main>
+        <SiteFooter navigation={navigation} settings={siteSettings} />        {process.env.NODE_ENV === "production" && <Analytics />}
       </body>
     </html>
   )

@@ -1,6 +1,6 @@
 import Link from "next/link"
 
-const partners = [
+const defaultPartners = [
   "ARAMCO",
   "STC",
   "SABIC",
@@ -13,7 +13,9 @@ const partners = [
   "ROSHN",
 ]
 
-export function PartnersStrip() {
+export function PartnersStrip({ data }: { data?: any[] }) {
+  const partners = data && data.length > 0 ? data.map(b => b.name) : defaultPartners;
+
   return (
     <section
       aria-labelledby="partners-heading"
@@ -50,3 +52,4 @@ export function PartnersStrip() {
     </section>
   )
 }
+

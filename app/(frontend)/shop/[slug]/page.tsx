@@ -5,7 +5,9 @@ import Link from "next/link"
 import { getPayloadClient } from "@/lib/payload"
 import { PageHero } from "@/components/page-hero"
 import { Button } from "@/components/ui/button"
-import { AddToCartButton } from "./add-to-cart-button"
+import { ProductActions } from "./product-actions"
+
+export const revalidate = 3600
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -65,8 +67,8 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               <div className="prose prose-lg prose-slate max-w-none text-right">
                 <h2 className="font-display text-3xl font-bold text-[var(--brand-navy)]">تفاصيل الباقة</h2>
                 <div className="mt-6 text-[17px] leading-[1.8] text-muted-foreground">
-                   {/* This would normally be rendered rich text, using a placeholder for now if description is complex */}
-                   <div dangerouslySetInnerHTML={{ __html: product.description ? "الوصف التفصيلي للباقة وما تشمله من خدمات ومعايير تنفيذ عالية الجودة." : "" }} />
+                  {/* This would normally be rendered rich text, using a placeholder for now if description is complex */}
+                  <div dangerouslySetInnerHTML={{ __html: product.description ? "الوصف التفصيلي للباقة وما تشمله من خدمات ومعايير تنفيذ عالية الجودة." : "" }} />
                 </div>
 
                 <div className="mt-12 grid gap-6 sm:grid-cols-2">
@@ -105,10 +107,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   <div className="grid gap-4 sm:grid-cols-2">
                     {gallery.map((item, i) => (
                       <div key={i} className="aspect-video overflow-hidden rounded-2xl border border-border">
-                        <img 
-                          src={item.image.url} 
-                          alt={`${product.name} gallery ${i}`} 
-                          className="h-full w-full object-cover transition hover:scale-105" 
+                        <img
+                          src={item.image.url}
+                          alt={`${product.name} gallery ${i}`}
+                          className="h-full w-full object-cover transition hover:scale-105"
                         />
                       </div>
                     ))}
@@ -125,7 +127,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                     <Star className="h-4 w-4 fill-[var(--brand-gold)]" />
                     باقة معتمدة من مَراسي
                   </div>
-                  
+
                   <div className="mt-6 flex items-baseline gap-2">
                     <span className="font-display text-5xl font-bold text-primary">
                       {formatPrice(product.price)}
@@ -134,24 +136,26 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                       {billingLabel[product.billingCycle as string] || "مرة واحدة"}
                     </span>
                   </div>
-                  
+
                   <p className="mt-4 text-[14px] text-muted-foreground">
                     * جميع الأسعار تشمل ضريبة القيمة المضافة بنسبة 15%.
                   </p>
 
                   <div className="mt-8 space-y-4">
-                    <AddToCartButton 
+                    <ProductActions
                       product={{
                         id: product.id,
                         slug: product.slug,
                         name: product.name,
-                        price: product.price,
-                        currency: product.currency as string,
-                        billingCycle: product.billingCycle as string,
-                        coverImage: (product.coverImage as any)?.url
-                      }} 
+                        price: Number(product.price),
+                        currency: String(product.currency || "SAR"),
+                        billingCycle: String(product.billingCycle || "one-time"),
+                        coverImage: (product.coverImage as any)?.url,
+                        hasVariants: product.hasVariants,
+                        variants: product.variants as any[] | null
+                      }}
                     />
-                    
+
                     <Button variant="outline" size="lg" className="w-full border-border h-14" asChild>
                       <Link href="/request-quote">طلب تخصيص للباقة</Link>
                     </Button>

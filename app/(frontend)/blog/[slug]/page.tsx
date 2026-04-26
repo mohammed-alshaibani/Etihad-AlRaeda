@@ -1,92 +1,182 @@
+import { notFound } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { notFound } from "next/navigation"
-import { ArrowUpLeft, Clock, Share2 } from "lucide-react"
+import { getPayload } from "payload"
+import config from "@payload-config"
+import { RichText } from "@payloadcms/richtext-lexical/react"
+import { Calendar, Clock, Tag, ChevronLeft } from "lucide-react"
 
-import { PageHero } from "@/components/page-hero"
-import { posts } from "@/lib/sample-data"
-
-export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }))
+interface PageProps {
+  params: Promise<{ slug: string }>
 }
 
-export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const post = posts.find((p) => p.slug === slug)
-  if (!post) notFound()
+export async function generateMetadata({ params }: PageProps) {
+  const resolvedParams = await params
+  const payload = await getPayload({ config })
 
-  const related = posts.filter((p) => p.slug !== slug && p.category === post.category).slice(0, 3)
-  const fallback = posts.filter((p) => p.slug !== slug).slice(0, 3)
-  const suggestions = related.length ? related : fallback
+  const { docs } = await payload.find({
+    collection: "posts",
+    where: {
+      slug: { equals: resolvedParams.slug },
+      status: { equals: "published" },
+    },
+    limit: 1,
+  })
+
+  if (!docs.length) return { title: "Post Not Found | Etihad AlRaeda" }
+
+  const post = docs[0]
+
+  return {
+    title: post.seo?.metaTitle || `${post.title} | Etihad AlRaeda Insights`,
+    description: post.seo?.metaDescription || post.excerpt || "",
+    openGraph: {
+      title: post.seo?.metaTitle || post.title,
+      description: post.seo?.metaDescription || post.excerpt || "",
+      images: post.seo?.ogImage ? [post.seo.ogImage] : [],
+    },
+  }
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: "posts",
+    where: { status: { equals: "published" } },
+    limit: 100,
+  })
+
+  return docs.map((doc) => ({
+    slug: doc.slug,
+  }))
+}
+
+export default async function BlogPostPage({ params }: PageProps) {
+  const resolvedParams = await params
+  const payload = await getPayload({ config })
+
+  const { docs } = await payload.find({
+    collection: "posts",
+    where: {
+      slug: { equals: resolvedParams.slug },
+      status: { equals: "published" },
+    },
+    depth: 2,
+    limit: 1,
+  })
+
+  if (!docs.length) notFound()
+
+  const post = docs[0]
+
+  // Type narrow the relation fields explicitly if they are fully populated documents
+  const authorName = post.author && typeof post.author === "object" ? post.author.name : null
+  const authorRole = post.author && typeof post.author === "object" ? post.author.role : null
+  const authorImage = post.author && typeof post.author === "object" ? post.author.image?.url : null
 
   return (
-    <>
-      <PageHero
-        eyebrow={post.category}
-        title={post.title}
-        description={post.excerpt}
-        breadcrumbs={[
-          { label: "الرئيسية", href: "/" },
-          { label: "المدونة", href: "/blog" },
-          { label: post.title.slice(0, 40) + "…" },
-        ]}
-      />
+    <article className="min-h-screen bg-background pb-20 pt-32 text-foreground">
+      <div className="mx-auto max-w-4xl container-px">
 
-      <section className="bg-white py-16">
-        <div className="mx-auto max-w-3xl px-5 md:px-8">
-          <div className="mb-8 flex flex-wrap items-center gap-4 border-y border-[var(--brand-border)] py-5 text-[13px]">
-            <span className="font-semibold text-[var(--brand-navy)]">{post.author}</span>
-            <span className="text-[var(--brand-muted)]">— {post.authorRole}</span>
-            <span className="mx-2 h-4 w-px bg-[var(--brand-border)]" />
-            <span className="text-[var(--brand-muted)]">{post.date}</span>
-            <span className="mx-2 h-4 w-px bg-[var(--brand-border)]" />
-            <span className="flex items-center gap-1.5 text-[var(--brand-muted)]"><Clock className="h-3.5 w-3.5" />{post.readTime}</span>
-            <span className="mr-auto flex items-center gap-1.5 text-[var(--brand-navy)]"><Share2 className="h-3.5 w-3.5" /> مشاركة</span>
-          </div>
+        {/* Back Button */}
+        <Link
+          href="/blog"
+          className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors mb-8"
+        >
+          <ChevronLeft className="w-4 h-4 mr-1" />
+          العودة للمدونة
+        </Link>
 
-          <div className="relative mb-10 aspect-[16/9] overflow-hidden rounded-sm">
-            <Image src={post.image} alt={post.title} fill sizes="(min-width: 768px) 768px, 100vw" className="object-cover" priority />
-          </div>
+        <header className="mb-12">
+          {post.category && (
+            <span className="inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary mb-4">
+              {post.category}
+            </span>
+          )}
 
-          <article className="space-y-6 text-[17px] leading-[1.9] text-[var(--brand-ink)]">
-            {post.content.map((p, i) => (
-              <p key={i} className={i === 0 ? "text-[18px] font-medium text-[var(--brand-navy)]" : ""}>{p}</p>
-            ))}
-          </article>
+          <h1 className="font-display text-4xl font-bold leading-tight md:text-5xl lg:text-6xl text-balance mb-6">
+            {post.title}
+          </h1>
 
-          <div className="mt-14 border-t border-[var(--brand-border)] pt-8">
-            <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--brand-navy)] font-serif text-[18px] text-white">
-                {post.author.split(" ")[0][0]}
+          <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground border-y border-border py-4">
+            {post.publishedAt && (
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-primary/70" />
+                <time dateTime={post.publishedAt}>
+                  {new Date(post.publishedAt).toLocaleDateString("ar-SA", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </time>
               </div>
-              <div>
-                <div className="text-[15px] font-semibold text-[var(--brand-navy)]">{post.author}</div>
-                <div className="text-[13px] text-[var(--brand-muted)]">{post.authorRole}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            )}
 
-      <section className="border-t border-[var(--brand-border)] bg-[var(--brand-cream)] py-20">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
-          <h2 className="mb-10 font-serif text-[32px] text-[var(--brand-navy)]">مقالات ذات صلة</h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {suggestions.map((p) => (
-              <Link key={p.slug} href={`/blog/${p.slug}`} className="group">
-                <div className="relative mb-5 aspect-[4/3] overflow-hidden rounded-sm">
-                  <Image src={p.image} alt={p.title} fill sizes="33vw" className="object-cover transition duration-700 group-hover:scale-105" />
-                </div>
-                <div className="mb-2 text-[12px] text-[var(--brand-gold)]">{p.category}</div>
-                <h3 className="mb-3 text-[17px] font-semibold text-[var(--brand-navy)] group-hover:text-[var(--brand-gold)]">{p.title}</h3>
-                <div className="flex items-center gap-1 text-[13px] font-medium text-[var(--brand-navy)] group-hover:text-[var(--brand-gold)]">
-                  اقرأ المقال <ArrowUpLeft className="h-3.5 w-3.5" />
-                </div>
-              </Link>
-            ))}
+            {post.readingTime && (
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-primary/70" />
+                <span>{post.readingTime} دقائق للقراءة</span>
+              </div>
+            )}
           </div>
+        </header>
+
+        {post.coverImage && typeof post.coverImage === "object" && post.coverImage.url && (
+          <div className="relative aspect-[21/9] w-full overflow-hidden rounded-2xl mb-12">
+            <Image
+              src={post.coverImage.url}
+              alt={post.title}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-12">
+          <main className="prose prose-lg prose-invert max-w-none prose-headings:font-display prose-headings:font-bold prose-a:text-primary hover:prose-a:text-primary/80 prose-img:rounded-xl">
+            {post.content && typeof post.content === "object" && (
+              <RichText data={post.content as any} />
+            )}
+          </main>
+
+          <aside className="space-y-8">
+            {authorName && (
+              <div className="rounded-xl border border-border bg-muted/50 p-6 flex items-center gap-4">
+                {authorImage && (
+                  <div className="relative w-14 h-14 rounded-full overflow-hidden shrink-0">
+                    <Image src={authorImage} alt={authorName} fill className="object-cover" />
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">بقلم</p>
+                  <p className="font-display font-semibold text-foreground">{authorName}</p>
+                  {authorRole && <p className="text-xs text-muted-foreground">{authorRole}</p>}
+                </div>
+              </div>
+            )}
+
+            {post.tags && post.tags.length > 0 && (
+              <div className="rounded-xl border border-border bg-muted/50 p-6">
+                <h3 className="font-display font-semibold mb-4 text-sm flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-primary" />
+                  الوسوم
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tagObj: any, index: number) => (
+                    <span
+                      key={index}
+                      className="rounded bg-background border border-border px-2.5 py-1 text-xs text-foreground/80"
+                    >
+                      {tagObj.tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </aside>
         </div>
-      </section>
-    </>
+      </div>
+    </article>
   )
 }

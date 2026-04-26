@@ -1,24 +1,22 @@
-import { notFound } from "next/navigation"
-import { getPayloadClient } from "@/lib/payload"
-import { Printer } from "lucide-react"
+import Link from "next/link"
+import { Check, ArrowLeft, Building, Mail, Phone, Calendar } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
+import { getPayloadClient } from "@/lib/payload"
+import { notFound } from "next/navigation"
 
 interface InvoicePageProps {
   params: Promise<{ orderNumber: string }>
 }
 
-function formatPrice(amount: number, currency = "SAR") {
-  return new Intl.NumberFormat("ar-SA", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-  }).format(amount)
-}
-
 export default async function InvoicePage({ params }: InvoicePageProps) {
   const { orderNumber } = await params
-  const payload = await getPayloadClient()
 
+  if (!orderNumber) {
+    notFound()
+  }
+
+  const payload = await getPayloadClient()
   const { docs: orders } = await payload.find({
     collection: "orders",
     where: { orderNumber: { equals: orderNumber } },
@@ -32,95 +30,89 @@ export default async function InvoicePage({ params }: InvoicePageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 py-12 print:bg-white print:py-0">
-      <div className="mx-auto max-w-4xl bg-white p-8 shadow-premium print:shadow-none md:p-16">
-        {/* Header */}
-        <div className="flex flex-col items-start justify-between gap-8 border-b border-border pb-12 md:flex-row print:flex-row">
-          <div>
-            <h1 className="font-display text-4xl font-bold text-primary">فاتورة ضريبية</h1>
-            <p className="mt-2 text-muted-foreground">رقم الفاتورة: <span dir="ltr">{order.orderNumber}</span></p>
-            <p className="text-muted-foreground">تاريخ الإصدار: {new Date(order.createdAt).toLocaleDateString('ar-SA')}</p>
-          </div>
-          <div className="text-right">
-             <h2 className="font-display text-2xl font-bold text-foreground">شركة مَراسي للمقاولات</h2>
-             <p className="text-sm text-muted-foreground">الرقم الضريبي: 300012345678903</p>
-             <p className="text-sm text-muted-foreground">الرياض، المملكة العربية السعودية</p>
-             <p className="text-sm text-muted-foreground">contact@marasi.sa</p>
-          </div>
+    <div className="py-16 md:py-24">
+      <div className="mx-auto max-w-3xl container-px text-center">
+        <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-primary/10">
+          <Check className="h-12 w-12 text-primary" strokeWidth={3} />
         </div>
 
-        {/* Customer Info */}
-        <div className="grid gap-12 py-12 md:grid-cols-2 print:grid-cols-2">
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">فاتورة إلى:</h3>
-            <p className="font-display text-xl font-bold text-foreground">{order.customerName}</p>
-            <p className="text-muted-foreground">{order.companyName}</p>
-            {order.vatNumber && <p className="text-sm text-muted-foreground">الرقم الضريبي: {order.vatNumber}</p>}
-            <p className="text-sm text-muted-foreground">{order.customerEmail}</p>
-          </div>
-          <div className="md:text-left print:text-left">
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">حالة الدفع:</h3>
-            <p className={order.status === 'completed' ? 'font-bold text-green-600' : 'font-bold text-amber-600'}>
-              {order.status === 'completed' ? 'تم السداد' : 'بانتظار السداد'}
-            </p>
-            <p className="mt-2 text-sm text-muted-foreground">طريقة الدفع: {order.paymentMethod}</p>
-          </div>
-        </div>
+        <h1 className="font-display text-4xl font-bold text-foreground md:text-5xl">تم استلام طلبك بنجاح!</h1>
+        <p className="mt-4 text-lg text-muted-foreground">
+          شكراً لثقتك بـ "مَراسي". تم تسجيل طلبك في نظامنا وسيتواصل معك فريقنا قريباً.
+        </p>
 
-        {/* Table */}
-        <div className="overflow-hidden rounded-xl border border-border">
-          <table className="w-full text-right">
-            <thead className="bg-muted/50 text-sm font-bold text-muted-foreground">
-              <tr>
-                <th className="px-6 py-4">الخدمة / الباقة</th>
-                <th className="px-6 py-4">الكمية</th>
-                <th className="px-6 py-4">سعر الوحدة</th>
-                <th className="px-6 py-4">المجموع</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border text-sm">
-              {order.items.map((item: any, i: number) => (
-                <tr key={i}>
-                  <td className="px-6 py-4 font-bold text-foreground">{item.productName}</td>
-                  <td className="px-6 py-4">{item.quantity}</td>
-                  <td className="px-6 py-4">{formatPrice(item.unitPrice)}</td>
-                  <td className="px-6 py-4 font-bold">{formatPrice(item.subtotal)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Totals */}
-        <div className="flex justify-start py-12">
-          <div className="w-full max-w-xs space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">المجموع الفرعي</span>
-              <span className="font-bold text-foreground">{formatPrice(order.subtotal)}</span>
+        <div className="mt-12 overflow-hidden rounded-2xl border border-border bg-card shadow-premium">
+          <div className="border-b border-border bg-muted/50 px-6 py-4 text-sm font-bold text-muted-foreground uppercase tracking-widest">
+            تفاصيل الطلب
+          </div>
+          <div className="p-8 text-right">
+            <div className="grid gap-8 md:grid-cols-2">
+              <div>
+                <p className="text-xs font-bold text-primary uppercase">رقم الطلب</p>
+                <p className="mt-1 font-display text-2xl font-bold text-foreground" dir="ltr">{order.orderNumber}</p>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-primary uppercase">التاريخ</p>
+                <p className="mt-1 font-display text-xl font-bold text-foreground">
+                  {new Date(order.createdAt).toLocaleDateString('ar-SA', { dateStyle: 'long' })}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">ضريبة القيمة المضافة (15%)</span>
-              <span className="font-bold text-foreground">{formatPrice(order.vatAmount)}</span>
+
+            <div className="mt-10 border-t border-border pt-8">
+              <h3 className="mb-4 font-display text-lg font-bold text-foreground">معلومات التواصل</h3>
+              <div className="space-y-3 text-sm">
+                <p className="flex items-center gap-3 justify-end text-muted-foreground">
+                  {order.customerName}
+                  <span className="h-5 w-5 flex items-center justify-center rounded bg-primary/10 text-primary">
+                    <Building className="h-3 w-3" />
+                  </span>
+                </p>
+                <p className="flex items-center gap-3 justify-end text-muted-foreground">
+                  {order.customerEmail}
+                  <span className="h-5 w-5 flex items-center justify-center rounded bg-primary/10 text-primary">
+                    <Mail className="h-3 w-3" />
+                  </span>
+                </p>
+                <p className="flex items-center gap-3 justify-end text-muted-foreground" dir="ltr">
+                  <span className="h-5 w-5 flex items-center justify-center rounded bg-primary/10 text-primary">
+                    <Phone className="h-3 w-3" />
+                  </span>
+                  {order.customerPhone}
+                </p>
+              </div>
             </div>
-            <div className="flex justify-between border-t border-border pt-3 text-lg font-bold">
-              <span className="text-foreground">الإجمالي النهائي</span>
-              <span className="text-primary">{formatPrice(order.total)}</span>
+
+            <div className="mt-10 rounded-xl bg-primary/5 p-6 text-sm text-primary border border-primary/10">
+              <p className="font-bold">ماذا يحدث الآن؟</p>
+              <ul className="mt-3 space-y-2">
+                <li className="flex items-start gap-2 justify-end">
+                  ستصلك رسالة تأكيد عبر البريد الإلكتروني خلال دقائق.
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                </li>
+                <li className="flex items-start gap-2 justify-end">
+                  سيقوم مدير حساب مخصص بمراجعة طلبك والتواصل معك لتنسيق البدء.
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                </li>
+                <li className="flex items-start gap-2 justify-end">
+                  في حال اختيار "التحويل البنكي"، يرجى إرفاق صورة التحويل عند تواصلنا معك.
+                  <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-border pt-12 text-center text-xs text-muted-foreground">
-          <p>هذه الفاتورة ناتجة آلياً ولا تحتاج إلى ختم أو توقيع.</p>
-          <p className="mt-1">حقوق الطبع محفوظة © {new Date().getFullYear()} لشركة مَراسي للمقاولات.</p>
-        </div>
-
-        {/* Print Button - hidden on print */}
-        <div className="fixed bottom-8 left-8 print:hidden">
-           <Button onClick={() => window.print()} size="lg" className="rounded-full shadow-2xl gap-2">
-              <Printer className="h-4 w-4" />
-              طباعة الفاتورة
-           </Button>
+        <div className="mt-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+          <Button asChild size="lg" className="min-w-[200px] gap-2 font-bold">
+            <Link href="/shop">
+              <ArrowLeft className="h-4 w-4" />
+              العودة للمتجر
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="min-w-[200px] font-bold">
+            <Link href="/">الصفحة الرئيسية</Link>
+          </Button>
         </div>
       </div>
     </div>

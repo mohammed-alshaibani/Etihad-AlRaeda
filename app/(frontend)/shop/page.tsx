@@ -2,7 +2,7 @@ import Link from "next/link"
 import { ShoppingBag, ArrowLeft } from "lucide-react"
 
 import { PageHero } from "@/components/page-hero"
-import { ProductCard } from "@/components/shop/product-card"
+import { ShopGrid } from "@/components/shop/shop-grid"
 import { Button } from "@/components/ui/button"
 import { getPayloadClient } from "@/lib/payload"
 
@@ -11,14 +11,7 @@ export const metadata = {
   description: "اختر الباقة المناسبة لشركتك وابدأ العمل فوراً. باقات احترافية مصممة لمتطلبات الشركات.",
 }
 
-const categoryLabels: Record<string, string> = {
-  consulting: "استشارات",
-  procurement: "توريد",
-  training: "تدريب",
-  technology: "تقنية",
-  legal: "قانوني",
-  other: "أخرى",
-}
+export const revalidate = 3600 // Revalidate the shop every hour
 
 export default async function ShopPage() {
   const payload = await getPayloadClient()
@@ -27,10 +20,18 @@ export default async function ShopPage() {
     collection: "products",
     where: { isActive: { equals: true } },
     sort: "-isFeatured",
+    limit: 100,
+  })
+
+  const { docs: categories } = await payload.find({
+    collection: "categories",
     limit: 50,
   })
 
-  const categories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)))
+  const { docs: brands } = await payload.find({
+    collection: "brands",
+    limit: 50,
+  })
 
   return (
     <>
@@ -49,66 +50,11 @@ export default async function ShopPage() {
         }
       />
 
-      <section className="py-16 md:py-20">
-        <div className="mx-auto max-w-7xl container-px">
-          {/* Category Filters */}
-          {categories.length > 1 && (
-            <div className="mb-12 flex flex-wrap gap-2">
-              <button className="rounded-full border border-primary bg-primary px-5 py-2 text-[13px] font-bold text-primary-foreground transition-all">
-                الكل
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  className="rounded-full border border-border bg-card px-5 py-2 text-[13px] font-bold text-muted-foreground transition-all hover:border-primary hover:text-primary"
-                >
-                  {categoryLabels[cat as string] ?? cat}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Products Grid */}
-          {products.length > 0 ? (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={{
-                    id: product.id,
-                    slug: product.slug,
-                    name: product.name,
-                    tagline: product.tagline ?? undefined,
-                    price: product.price,
-                    currency: product.currency ?? "SAR",
-                    billingCycle: product.billingCycle ?? "one-time",
-                    badge: product.badge ?? undefined,
-                    isFeatured: product.isFeatured ?? false,
-                    features: (product.features as any) ?? [],
-                    coverImage: typeof product.coverImage === "object" && product.coverImage
-                      ? { url: (product.coverImage as any).url }
-                      : null,
-                    category: product.category ?? undefined,
-                    deliveryDays: product.deliveryDays ?? undefined,
-                  }}
-                />
-              ))}
-            </div>
-          ) : (
-            /* Empty state */
-            <div className="rounded-2xl border-2 border-dashed border-border py-24 text-center">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-muted">
-                <ShoppingBag className="h-10 w-10 text-muted-foreground/30" />
-              </div>
-              <p className="font-display text-2xl font-bold text-foreground">لا توجد باقات متاحة حالياً</p>
-              <p className="mt-3 text-muted-foreground">يمكنك طلب عرض سعر مخصّص لاحتياجاتك.</p>
-              <Button asChild className="mt-8">
-                <Link href="/request-quote">طلب عرض سعر</Link>
-              </Button>
-            </div>
-          )}
-        </div>
-      </section>
+      <ShopGrid
+        initialProducts={products}
+        categories={categories}
+        brands={brands}
+      />
 
       {/* Trust Strip */}
       <section className="border-t border-border bg-muted/30 py-12">

@@ -9,19 +9,76 @@ import { InsightsSection } from "@/components/home/insights-section"
 import { FaqSection } from "@/components/home/faq-section"
 import { FinalCta } from "@/components/home/final-cta"
 
-export default function HomePage() {
+import { getPayload } from "payload"
+import config from "@payload-config"
+
+export default async function HomePage() {
+  const payload = await getPayload({ config })
+
+  // Fetch homepage global
+  let homepage: any = null
+  try {
+    homepage = await payload.findGlobal({
+      slug: "homepage",
+      depth: 2,
+    })
+  } catch (error) {
+    console.error("Error fetching homepage global:", error)
+  }
+
+  // Fetch featured services/products
+  let services: any[] = []
+  try {
+    const servicesRes = await payload.find({
+      collection: "products",
+      limit: 4,
+      depth: 1,
+    })
+    services = servicesRes.docs
+  } catch (error) {
+    console.error("Error fetching products:", error)
+  }
+
+  // Fetch partners (brands)
+  let brands: any[] = []
+  try {
+    const brandsRes = await payload.find({
+      collection: "brands",
+      limit: 15,
+    })
+    brands = brandsRes.docs
+  } catch (error) {
+    console.error("Error fetching brands:", error)
+  }
+
+  // Fetch recent posts (insights)
+  let posts: any[] = []
+  try {
+    const postsRes = await payload.find({
+      collection: "posts",
+      where: {
+        status: { equals: "published" }
+      },
+      sort: "-publishedAt",
+      limit: 3,
+    })
+    posts = postsRes.docs
+  } catch (error) {
+    console.error("Error fetching posts:", error)
+  }
+
   return (
     <>
-      <HeroSection />
-      <PartnersStrip />
-      <ServicesSection />
-      <AboutSection />
-      <PortfolioSection />
-      <ProcessSection />
+      <HeroSection heroSlides={homepage?.heroSlides || []} />
+      <PartnersStrip data={brands} />
+      <ServicesSection data={homepage?.servicesSection || {}} services={services} />
+      <AboutSection data={homepage?.about || {}} />
+      <PortfolioSection data={homepage?.portfolioSection || {}} />
+      <ProcessSection data={homepage?.processSection || {}} />
       <TestimonialsSection />
-      <InsightsSection />
+      <InsightsSection data={posts} />
       <FaqSection />
-      <FinalCta />
+      <FinalCta data={homepage?.finalCta || {}} />
     </>
   )
 }

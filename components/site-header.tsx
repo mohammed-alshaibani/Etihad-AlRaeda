@@ -28,7 +28,7 @@ import { GlobalSearch } from "@/components/global-search"
 
 
 
-export function SiteHeader() {
+export function SiteHeader({ navigation }: { navigation?: any }) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
 
@@ -89,7 +89,7 @@ export function SiteHeader() {
             aria-label="التنقل الرئيسي"
             className="hidden items-center gap-1 lg:flex"
           >
-            {mainNav.map((item) => {
+            {(navigation?.mainMenu || mainNav).map((item: any) => {
               if (item.items) {
                 return (
                   <DropdownMenu key={item.label}>
@@ -109,7 +109,7 @@ export function SiteHeader() {
                       <DropdownMenuLabel className="px-2 text-xs font-semibold uppercase tracking-wider text-primary">
                         {item.label}
                       </DropdownMenuLabel>
-                      {item.items.map((subItem) => (
+                      {item.items?.map((subItem: any) => (
                         <DropdownMenuItem key={subItem.href} asChild>
                           <Link
                             href={subItem.href || "#"}
@@ -152,7 +152,7 @@ export function SiteHeader() {
           {/* CTA cluster */}
           <div className="flex items-center gap-3">
             <div className="hidden lg:block mr-2">
-               <GlobalSearch />
+              <GlobalSearch />
             </div>
             <Button
 
@@ -196,7 +196,7 @@ export function SiteHeader() {
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-5">
                   <nav className="flex flex-col space-y-2">
-                    {mainNav.map((item) => {
+                    {(navigation?.mainMenu || mainNav).map((item: any) => {
                       if (item.items) {
                         return (
                           <div key={item.label} className="mt-2 space-y-1">
@@ -204,7 +204,7 @@ export function SiteHeader() {
                               {item.label}
                             </p>
                             <div className="flex flex-col">
-                              {item.items.map((subItem) => (
+                              {item.items?.map((subItem: any) => (
                                 <Link
                                   key={subItem.href}
                                   href={subItem.href || "#"}

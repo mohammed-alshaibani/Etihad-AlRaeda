@@ -33,17 +33,20 @@ const projects = [
   },
 ]
 
-export function PortfolioSection() {
+export function PortfolioSection({ data }: { data?: any }) {
+  const eyebrow = data?.eyebrow || "أعمالنا ومشاريعنا"
+  const title = data?.title || "نتائج حقيقية لشركات قياسية"
+
   return (
     <section id="portfolio" className="bg-background py-24 md:py-32 lg:py-40">
       <div className="mx-auto max-w-7xl container-px">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-              أعمالنا ومشاريعنا
+              {eyebrow}
             </p>
             <h2 className="mt-2 font-display text-3xl font-bold text-balance text-foreground md:text-4xl">
-              نتائج حقيقية لشركات قياسية
+              {title}
             </h2>
           </div>
           <Button
@@ -69,9 +72,8 @@ export function PortfolioSection() {
                 className="group relative flex h-full flex-col overflow-hidden rounded-3xl bg-background text-foreground shadow-premium transition duration-500 hover:-translate-y-2 hover:shadow-premium-xl"
               >
                 <div
-                  className={`relative ${
-                    idx === 0 ? "aspect-[16/9] md:aspect-[21/9]" : "aspect-[4/3]"
-                  }`}
+                  className={`relative ${idx === 0 ? "aspect-[16/9] md:aspect-[21/9]" : "aspect-[4/3]"
+                    }`}
                 >
                   <Image
                     src={project.img}
@@ -109,3 +111,4 @@ export function PortfolioSection() {
     </section>
   )
 }
+

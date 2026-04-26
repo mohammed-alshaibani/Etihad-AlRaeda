@@ -4,7 +4,12 @@ import { ArrowLeft, CalendarDays } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
-export function FinalCta() {
+export function FinalCta({ data }: { data?: any }) {
+  const title = data?.title || "لنصمّم معاً خارطة طريق أعمالك للعام القادم"
+  const description = data?.description || "جلسة استكشافية مجانية لمدة 45 دقيقة مع أحد كبار استشاريينا، ستحصل بنهايتها على 3 توصيات قابلة للتنفيذ فوراً."
+  const ctaLabel = data?.ctaLabel || "طلب عرض سعر"
+  const ctaUrl = data?.ctaUrl || "/request-quote"
+
   return (
     <section className="relative overflow-hidden bg-background py-20 text-foreground md:py-28">
       <div className="absolute inset-0 opacity-20">
@@ -25,11 +30,10 @@ export function FinalCta() {
           جاهزون للخطوة التالية؟
         </p>
         <h2 className="mx-auto mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-balance text-foreground md:text-5xl">
-          لنصمّم معاً خارطة طريق أعمالك للعام القادم
+          {title}
         </h2>
         <p className="mx-auto mt-5 max-w-2xl text-base text-foreground/75 md:text-base">
-          جلسة استكشافية مجانية لمدة 45 دقيقة مع أحد كبار استشاريينا، ستحصل
-          بنهايتها على 3 توصيات قابلة للتنفيذ فوراً.
+          {description}
         </p>
 
         <div className="mt-10 flex flex-wrap justify-center gap-3">
@@ -38,8 +42,8 @@ export function FinalCta() {
             size="lg"
             className="h-12 bg-primary px-7 text-base font-semibold text-foreground shadow-premium-lg hover:bg-primary/90"
           >
-            <Link href="/request-quote">
-              طلب عرض سعر
+            <Link href={ctaUrl || "/request-quote"}>
+              {ctaLabel}
               <ArrowLeft className="mr-2 h-4 w-4" />
             </Link>
           </Button>
@@ -74,3 +78,4 @@ export function FinalCta() {
     </section>
   )
 }
+

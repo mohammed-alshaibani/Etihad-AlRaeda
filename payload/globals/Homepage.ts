@@ -8,24 +8,14 @@ export const Homepage: GlobalConfig = {
   access: { read: () => true },
   fields: [
     {
-      name: "hero",
-      type: "group",
-      label: { ar: "القسم الرئيسي (Hero)", en: "Hero Section" },
-      fields: [
-        { name: "eyebrow", type: "text", localized: true, label: { ar: "نص تعريفي علوي", en: "Eyebrow" } },
-        { name: "headline", type: "text", localized: true, label: { ar: "العنوان الرئيسي", en: "Headline" } },
-        { name: "subheadline", type: "textarea", localized: true, label: { ar: "العنوان الفرعي", en: "Subheadline" } },
-        { name: "primaryCtaLabel", type: "text", localized: true, label: { ar: "زر رئيسي - النص", en: "Primary CTA" } },
-        { name: "primaryCtaUrl", type: "text", label: { ar: "زر رئيسي - الرابط", en: "Primary CTA URL" } },
-        {
-          name: "secondaryCtaLabel",
-          type: "text",
-          localized: true,
-          label: { ar: "زر ثانوي - النص", en: "Secondary CTA" },
-        },
-        { name: "secondaryCtaUrl", type: "text", label: { ar: "زر ثانوي - الرابط", en: "Secondary CTA URL" } },
-        { name: "backgroundImage", type: "upload", relationTo: "media", label: { ar: "الخلفية", en: "Background" } },
-      ],
+      name: "heroSlides",
+      type: "relationship",
+      relationTo: "hero-slides",
+      hasMany: true,
+      label: { ar: "شرائح القسم الرئيسي", en: "Hero Slides" },
+      admin: {
+        description: "اختر الشرائح وستُرتَّب تلقائياً حسب حقل 'الترتيب' في كل شريحة. إدارة الشرائح من قسم 'شرائح القسم الرئيسي'",
+      },
     },
     {
       name: "about",
