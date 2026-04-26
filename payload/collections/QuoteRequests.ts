@@ -6,6 +6,11 @@ export const QuoteRequests: CollectionConfig = {
     useAsTitle: "companyName",
     defaultColumns: ["companyName", "contactName", "email", "status", "createdAt"],
     group: "الطلبات والعملاء المحتملون",
+    components: {
+      views: {
+        list: { Component: "@/payload/components/CollectionListView" },
+      },
+    },
   },
   labels: {
     singular: { ar: "طلب عرض سعر", en: "Quote Request" },

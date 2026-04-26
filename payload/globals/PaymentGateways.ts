@@ -6,6 +6,7 @@ export const PaymentGateways: GlobalConfig = {
         en: "Payment Gateways",
         ar: "بوابات الدفع",
     },
+    admin: { group: "الإعدادات" },
     access: {
         read: () => true,
         update: ({ req: { user } }) => Boolean(user && user.role === "superadmin"),

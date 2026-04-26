@@ -75,7 +75,7 @@ export default buildConfig({
     },
     // ── Custom Admin Components ──────────────────────────────────────────
     components: {
-      afterNavLinks: ["@/payload/components/AnalyticsNavLink"],
+      Nav: "@/payload/components/CustomSidebar",
       views: {
         dashboard: {
           Component: "@/payload/components/AdminDashboard",
@@ -95,6 +95,7 @@ export default buildConfig({
     fallback: true,
   },
   i18n: {
+    supportedLanguages: { ar: require("@payloadcms/translations/languages/ar").ar },
     fallbackLanguage: "ar",
   },
   // ─── Collections ──────────────────────────────────────────────────────────

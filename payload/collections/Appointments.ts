@@ -6,6 +6,11 @@ export const Appointments: CollectionConfig = {
     useAsTitle: "contactName",
     defaultColumns: ["contactName", "company", "preferredDate", "meetingType", "status"],
     group: "الطلبات والعملاء المحتملون",
+    components: {
+      views: {
+        list: { Component: "@/payload/components/CollectionListView" },
+      },
+    },
   },
   labels: {
     singular: { ar: "موعد", en: "Appointment" },

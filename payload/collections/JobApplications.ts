@@ -6,6 +6,11 @@ export const JobApplications: CollectionConfig = {
     useAsTitle: "applicantName",
     defaultColumns: ["applicantName", "job", "status", "createdAt"],
     group: "الطلبات والعملاء المحتملون",
+    components: {
+      views: {
+        list: { Component: "@/payload/components/CollectionListView" },
+      },
+    },
   },
   labels: {
     singular: { ar: "طلب توظيف", en: "Application" },

@@ -2,16 +2,21 @@
 
 import React, { useEffect, useState } from "react"
 
-// ─── Brand Tokens ─────────────────────────────────────────────────────────────
-const C = {
-  navy: "#172946",
-  gold: "#B9995A",
-  goldLight: "rgba(185,153,90,0.1)",
-  gray: "#AFAFB0",
-  bg: "#F8F9FA",
-  white: "#FFFFFF",
-  border: "#E9ECEF",
-  muted: "#6B7280",
+// ─── Design Tokens — Strictly Neutral Light Mode ──────────────────────────────
+const T = {
+  bg: "#F8F9FA",         // page background: cool gray
+  white: "#FFFFFF",      // cards
+  border: "#E5E7EB",     // gray-200
+  borderLight: "#F3F4F6", // gray-100
+  text: "#111827",       // gray-900  — primary headings
+  textSub: "#6B7280",    // gray-500  — secondary text
+  textMuted: "#9CA3AF",  // gray-400  — tertiary / placeholders
+  hover: "#F9FAFB",      // gray-50   — hover backgrounds
+  activeBg: "#F3F4F6",   // gray-100  — active link bg
+  activeText: "#111827", // bold black
+  icon: "#374151",       // gray-700  — dark neutral icons
+  shadow: "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)",
+  shadowHover: "0 4px 16px rgba(0,0,0,0.10)",
 }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -25,72 +30,167 @@ type SectionItem = { label: string; sub: string; href: string }
 const fmtSAR = (n: number) =>
   new Intl.NumberFormat("ar-SA", { style: "currency", currency: "SAR", maximumFractionDigits: 0 }).format(n)
 
-// ─── Item Row ─────────────────────────────────────────────────────────────────
+// ─── Mock Analytics Table Data ────────────────────────────────────────────────
+const analyticsRows = [
+  { date: "٢٦ أبريل ٢٠٢٦", ref: "ORD-٢٠٢٦-٠٠١٢", status: "مكتمل", amount: "٣٬٢٥٠ ر.س", statusColor: "#16A34A", statusBg: "#DCFCE7" },
+  { date: "٢٥ أبريل ٢٠٢٦", ref: "QUO-٢٠٢٦-٠٠٣٤", status: "معلق",   amount: "٧٬٨٠٠ ر.س", statusColor: "#D97706", statusBg: "#FEF3C7" },
+  { date: "٢٤ أبريل ٢٠٢٦", ref: "ORD-٢٠٢٦-٠٠١١", status: "مكتمل", amount: "١٬٥٠٠ ر.س", statusColor: "#16A34A", statusBg: "#DCFCE7" },
+  { date: "٢٣ أبريل ٢٠٢٦", ref: "ORD-٢٠٢٦-٠٠١٠", status: "ملغي",   amount: "٢٬١٠٠ ر.س", statusColor: "#DC2626", statusBg: "#FEE2E2" },
+  { date: "٢٢ أبريل ٢٠٢٦", ref: "QUO-٢٠٢٦-٠٠٣٣", status: "مكتمل", amount: "٥٬٦٠٠ ر.س", statusColor: "#16A34A", statusBg: "#DCFCE7" },
+]
+
+// ─── Shared card wrapper ──────────────────────────────────────────────────────
+function Card({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
+  return (
+    <div style={{ background: T.white, borderRadius: "12px", border: `1px solid ${T.border}`, boxShadow: T.shadow, overflow: "hidden", ...style }}>
+      {children}
+    </div>
+  )
+}
+
+// ─── KPI Stat Cards ───────────────────────────────────────────────────────────
+function StatCard({
+  label, value, sub, icon,
+}: { label: string; value: string | number; sub: string; icon: string }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: T.white,
+        borderRadius: "12px",
+        border: `1px solid ${hov ? "#D1D5DB" : T.border}`,
+        boxShadow: hov ? T.shadowHover : T.shadow,
+        padding: "24px",
+        direction: "rtl",
+        transition: "all 0.2s ease",
+        transform: hov ? "translateY(-2px)" : "translateY(0)",
+        cursor: "default",
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
+        <div>
+          <div style={{ fontSize: "0.75rem", color: T.textSub, fontWeight: 600, marginBottom: "8px", letterSpacing: "0.02em" }}>
+            {label}
+          </div>
+          <div style={{ fontSize: "2rem", fontWeight: 800, color: T.text, lineHeight: 1 }}>
+            {value}
+          </div>
+          <div style={{ fontSize: "0.73rem", color: T.textMuted, marginTop: "6px" }}>{sub}</div>
+        </div>
+        <div style={{
+          width: "44px", height: "44px", background: T.borderLight,
+          borderRadius: "10px", display: "flex", alignItems: "center",
+          justifyContent: "center", fontSize: "1.3rem", flexShrink: 0,
+        }}>
+          {icon}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Analytics Data Table ─────────────────────────────────────────────────────
+function AnalyticsTable() {
+  const cols = [
+    { key: "date",   label: "التاريخ" },
+    { key: "ref",    label: "المرجع" },
+    { key: "status", label: "الحالة" },
+    { key: "amount", label: "المبلغ" },
+  ]
+  return (
+    <Card>
+      <div style={{ padding: "20px 24px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", direction: "rtl" }}>
+        <div>
+          <div style={{ fontWeight: 700, fontSize: "1rem", color: T.text }}>تحليل الأداء</div>
+          <div style={{ fontSize: "0.75rem", color: T.textSub, marginTop: "2px" }}>آخر ٥ معاملات</div>
+        </div>
+        <a href="/admin/collections/orders" style={{ fontSize: "0.78rem", color: T.textSub, textDecoration: "none", fontWeight: 600, padding: "6px 14px", border: `1px solid ${T.border}`, borderRadius: "8px", background: T.white, transition: "all 0.15s" }}>
+          عرض الكل
+        </a>
+      </div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.84rem" }}>
+          <thead>
+            <tr style={{ background: T.hover }}>
+              {cols.map(col => (
+                <th key={col.key} style={{
+                  padding: "12px 24px", textAlign: "right", color: T.textSub,
+                  fontWeight: 700, fontSize: "0.72rem", letterSpacing: "0.05em",
+                  borderBottom: `1px solid ${T.border}`, whiteSpace: "nowrap",
+                }}>
+                  {col.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {analyticsRows.map((row, i) => (
+              <tr key={i} style={{ borderBottom: i < analyticsRows.length - 1 ? `1px solid ${T.borderLight}` : "none" }}>
+                <td style={{ padding: "14px 24px", color: T.textSub, whiteSpace: "nowrap" }}>{row.date}</td>
+                <td style={{ padding: "14px 24px", color: T.text, fontWeight: 600, fontFamily: "monospace", fontSize: "0.8rem" }}>{row.ref}</td>
+                <td style={{ padding: "14px 24px" }}>
+                  <span style={{
+                    display: "inline-block", padding: "3px 10px", borderRadius: "20px",
+                    fontSize: "0.72rem", fontWeight: 700, background: row.statusBg, color: row.statusColor,
+                  }}>
+                    {row.status}
+                  </span>
+                </td>
+                <td style={{ padding: "14px 24px", color: T.text, fontWeight: 700, direction: "rtl" }}>{row.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+  )
+}
+
+// ─── Item Row inside a Section Card ──────────────────────────────────────────
 function ItemRow({ label, sub, href, isLast }: SectionItem & { isLast: boolean }) {
-  const [hovered, setHovered] = useState(false)
+  const [hov, setHov] = useState(false)
   return (
     <a
       href={href}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-        padding: "12px 20px",
-        direction: "rtl",
-        textDecoration: "none",
-        borderBottom: isLast ? "none" : `1px solid ${C.border}`,
-        background: hovered ? C.bg : "transparent",
+        display: "flex", alignItems: "center", gap: "12px",
+        padding: "13px 20px", direction: "rtl", textDecoration: "none",
+        borderBottom: isLast ? "none" : `1px solid ${T.borderLight}`,
+        background: hov ? T.hover : "transparent",
         transition: "background 0.15s ease",
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
     >
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 700, fontSize: "0.875rem", color: C.navy }}>{label}</div>
-        <div style={{ fontSize: "0.73rem", color: C.gray, marginTop: "2px" }}>{sub}</div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontWeight: 600, fontSize: "0.86rem", color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {label}
+        </div>
+        <div style={{ fontSize: "0.71rem", color: T.textMuted, marginTop: "2px" }}>{sub}</div>
       </div>
-      <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "22px",
-          height: "22px",
-          background: hovered ? C.gold : C.goldLight,
-          color: hovered ? C.white : C.gold,
-          borderRadius: "6px",
-          fontSize: "15px",
-          fontWeight: 700,
-          flexShrink: 0,
-          transition: "all 0.15s ease",
-        }}
-      >
+      <span style={{
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        width: "24px", height: "24px", flexShrink: 0,
+        background: hov ? T.activeBg : T.borderLight,
+        color: hov ? T.activeText : T.icon,
+        borderRadius: "7px", fontSize: "16px", fontWeight: 700,
+        transition: "all 0.15s ease",
+      }}>
         +
       </span>
     </a>
   )
 }
 
-// ─── KPI Mini Tile ─────────────────────────────────────────────────────────────
-function KpiTile({ label, value, color }: { label: string; value: string | number; color: string }) {
-  return (
-    <div style={{ background: C.white, padding: "14px 16px", direction: "rtl", textAlign: "right" }}>
-      <div style={{ fontSize: "1.5rem", fontWeight: 800, color, lineHeight: 1 }}>{value}</div>
-      <div style={{ fontSize: "0.7rem", color: C.gray, marginTop: "4px", fontWeight: 600 }}>{label}</div>
-    </div>
-  )
-}
-
-// ─── Section Card ─────────────────────────────────────────────────────────────
+// ─── Section Card Header ──────────────────────────────────────────────────────
 function SectionCard({
-  title, icon, items, children, columns = 2,
+  title, emoji, items, children, columns = 2,
 }: {
-  title: string; icon: string; items?: SectionItem[]
+  title: string; emoji: string; items?: SectionItem[]
   children?: React.ReactNode; columns?: number
 }) {
-  const [hovered, setHovered] = useState(false)
-
-  // Build columns
   const cols: SectionItem[][] = []
   if (items) {
     const perCol = Math.ceil(items.length / columns)
@@ -100,71 +200,51 @@ function SectionCard({
   }
 
   return (
-    <div
-      style={{
-        background: C.white,
-        border: `1px solid ${hovered ? C.gold : C.border}`,
-        borderRadius: "16px",
-        boxShadow: hovered ? "0 8px 24px rgba(23,41,70,0.1)" : "0 1px 4px rgba(0,0,0,0.06)",
-        overflow: "hidden",
-        transition: "all 0.25s ease",
-        transform: hovered ? "translateY(-2px)" : "translateY(0)",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      {/* Header */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "18px 24px 16px", borderBottom: `1px solid ${C.border}`, direction: "rtl" }}>
-        <div style={{ width: "4px", height: "20px", background: C.gold, borderRadius: "2px", flexShrink: 0 }} />
-        <span style={{ fontSize: "1rem" }}>{icon}</span>
-        <span style={{ fontWeight: 800, fontSize: "0.975rem", color: C.navy }}>{title}</span>
+    <Card>
+      {/* Card Header */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: "10px",
+        padding: "16px 20px", borderBottom: `1px solid ${T.border}`, direction: "rtl",
+      }}>
+        <div style={{
+          width: "36px", height: "36px", background: T.borderLight, borderRadius: "9px",
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.1rem", flexShrink: 0,
+        }}>
+          {emoji}
+        </div>
+        <span style={{ fontWeight: 700, fontSize: "0.95rem", color: T.text }}>{title}</span>
       </div>
 
-      {/* Slot for KPIs */}
+      {/* Optional KPI mini bar */}
       {children}
 
       {/* Item columns */}
       {items && (
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, 1fr)`, borderTop: children ? `1px solid ${C.border}` : "none" }}>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns}, 1fr)` }}>
           {cols.map((col, ci) => (
-            <div key={ci} style={{ borderLeft: ci > 0 ? `1px solid ${C.border}` : "none" }}>
+            <div key={ci} style={{ borderInlineEnd: ci > 0 ? `1px solid ${T.borderLight}` : "none" }}>
               {col.map((item, i) => (
-                <ItemRow key={item.href + item.label} {...item} isLast={i === col.length - 1} />
+                <ItemRow key={item.href} {...item} isLast={i === col.length - 1} />
               ))}
             </div>
           ))}
         </div>
       )}
-    </div>
+    </Card>
   )
 }
 
-// ─── KPI Summary Bar ──────────────────────────────────────────────────────────
-function SummaryBar({ stats, loading }: { stats: StatsType; loading: boolean }) {
-  const items = [
-    { label: "إجمالي الطلبات", value: stats.orders, color: C.navy, bg: "rgba(23,41,70,0.06)" },
-    { label: "الإيرادات", value: loading ? "..." : fmtSAR(stats.revenue), color: C.gold, bg: "rgba(185,153,90,0.08)" },
-    { label: "قيد الانتظار", value: stats.pending, color: "#EF4444", bg: "rgba(239,68,68,0.07)" },
-    { label: "عروض الأسعار", value: stats.quotes, color: "#8B5CF6", bg: "rgba(139,92,246,0.07)" },
-    { label: "العملاء المحتملون", value: stats.leads, color: "#F59E0B", bg: "rgba(245,158,11,0.07)" },
-    { label: "المواعيد", value: stats.appointments, color: "#10B981", bg: "rgba(16,185,129,0.07)" },
-  ]
+// ─── Mini KPI inline strip ────────────────────────────────────────────────────
+function MiniKpiStrip({ items }: { items: { label: string; value: string | number }[] }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
-      {items.map((item) => (
-        <div
-          key={item.label}
-          style={{
-            background: item.bg,
-            borderRadius: "12px",
-            padding: "16px 18px",
-            direction: "rtl",
-            border: `1px solid ${C.border}`,
-            cursor: "default",
-          }}
-        >
-          <div style={{ fontSize: "1.4rem", fontWeight: 800, color: item.color, lineHeight: 1 }}>{item.value}</div>
-          <div style={{ fontSize: "0.72rem", color: C.muted, marginTop: "5px", fontWeight: 600 }}>{item.label}</div>
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(${items.length}, 1fr)`, borderBottom: `1px solid ${T.border}` }}>
+      {items.map((k, i) => (
+        <div key={i} style={{
+          padding: "14px 16px", direction: "rtl", textAlign: "right",
+          borderInlineEnd: i > 0 ? `1px solid ${T.borderLight}` : "none",
+        }}>
+          <div style={{ fontSize: "1.35rem", fontWeight: 800, color: T.text, lineHeight: 1 }}>{k.value}</div>
+          <div style={{ fontSize: "0.69rem", color: T.textSub, marginTop: "4px", fontWeight: 600 }}>{k.label}</div>
         </div>
       ))}
     </div>
@@ -177,7 +257,7 @@ export default function DashboardClient() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    ; (async () => {
+    ;(async () => {
       try {
         const [ordersRes, quotesRes, leadsRes, apptRes, msgRes, jobRes] = await Promise.all([
           fetch("/api/orders?limit=200"),
@@ -204,115 +284,147 @@ export default function DashboardClient() {
     })()
   }, [])
 
-  // ── Section definitions ───────────────────────────────────────────────────
+  // ── Section data ─────────────────────────────────────────────────────────
   const adminItems: SectionItem[] = [
     { label: "المستخدمون", sub: "الأدوار والصلاحيات", href: "/admin/collections/users" },
     { label: "مكتبة الوسائط", sub: "الصور والملفات المرفوعة", href: "/admin/collections/media" },
   ]
 
   const pageContentItems: SectionItem[] = [
-    { label: "الصفحة الرئيسية", sub: "Homepage Global", href: "/admin/globals/homepage" },
-    { label: "عن المؤسسة", sub: "About Page Global", href: "/admin/globals/about-page" },
-    { label: "الشرائح (Hero)", sub: "Hero Slides", href: "/admin/collections/hero-slides" },
-    { label: "الصفحات الحرة", sub: "Dynamic Pages", href: "/admin/collections/dynamic-pages" },
+    { label: "الصفحة الرئيسية",  sub: "محتوى الصفحة الرئيسية",    href: "/admin/globals/homepage" },
+    { label: "عن المؤسسة",       sub: "صفحة التعريف بالمؤسسة",    href: "/admin/globals/about-page" },
+    { label: "الشرائح (Hero)",   sub: "شرائح الصدر التفاعلية",    href: "/admin/collections/hero-slides" },
+    { label: "الصفحات الحرة",    sub: "صفحات مخصصة قابلة للبناء", href: "/admin/collections/dynamic-pages" },
   ]
 
   const contentItems: SectionItem[] = [
-    { label: "الخدمات", sub: "تفاصيل خدماتنا", href: "/admin/collections/services" },
-    { label: "الأعمال", sub: "Portfolio", href: "/admin/collections/portfolio" },
-    { label: "المدونة", sub: "Blog Posts", href: "/admin/collections/posts" },
-    { label: "أعضاء الفريق", sub: "Team Members", href: "/admin/collections/team" },
-    { label: "آراء العملاء", sub: "Testimonials", href: "/admin/collections/testimonials" },
-    { label: "الشركاء والعملاء", sub: "Partners & Clients", href: "/admin/collections/partners" },
-    { label: "الأسئلة الشائعة", sub: "FAQs", href: "/admin/collections/f-a-qs" },
-    { label: "الوظائف", sub: "Careers Listings", href: "/admin/collections/careers" },
-    { label: "العروض والحزم", sub: "Offers & Packages", href: "/admin/collections/offers" },
-    { label: "أخبار وفعاليات", sub: "News & Events", href: "/admin/collections/news" },
-    { label: "المكتبة", sub: "Resources Library", href: "/admin/collections/resources" },
+    { label: "الخدمات",          sub: "تفاصيل الخدمات المقدمة",   href: "/admin/collections/services" },
+    { label: "الأعمال",          sub: "معرض الأعمال والمشاريع",   href: "/admin/collections/portfolio" },
+    { label: "المدونة",          sub: "المقالات والتدوينات",       href: "/admin/collections/posts" },
+    { label: "أعضاء الفريق",     sub: "ملفات أعضاء الفريق",       href: "/admin/collections/team" },
+    { label: "آراء العملاء",     sub: "شهادات وتقييمات العملاء",  href: "/admin/collections/testimonials" },
+    { label: "الشركاء والعملاء", sub: "العلامات التجارية الشريكة", href: "/admin/collections/partners" },
+    { label: "الأسئلة الشائعة",  sub: "أسئلة يطرحها العملاء",     href: "/admin/collections/f-a-qs" },
+    { label: "الوظائف",          sub: "الوظائف المتاحة",           href: "/admin/collections/careers" },
+    { label: "العروض والحزم",    sub: "عروض الأسعار والحزم",       href: "/admin/collections/offers" },
+    { label: "أخبار وفعاليات",   sub: "المستجدات والإعلانات",      href: "/admin/collections/news" },
+    { label: "المكتبة",          sub: "الموارد والملفات القابلة للتحميل", href: "/admin/collections/resources" },
   ]
 
   const crmItems: SectionItem[] = [
-    { label: "طلبات عروض السعر", sub: `${stats.quotes} طلب نشط`, href: "/admin/collections/quote-requests" },
-    { label: "المواعيد", sub: `${stats.appointments} موعد مؤكد`, href: "/admin/collections/appointments" },
-    { label: "رسائل التواصل", sub: `${stats.messages} رسالة واردة`, href: "/admin/collections/contact-messages" },
-    { label: "طلبات التوظيف", sub: `${stats.applications} طلب للمراجعة`, href: "/admin/collections/job-applications" },
+    { label: "طلبات عروض السعر", sub: `${stats.quotes} طلب نشط`,           href: "/admin/collections/quote-requests" },
+    { label: "المواعيد",          sub: `${stats.appointments} موعد مؤكد`,    href: "/admin/collections/appointments" },
+    { label: "رسائل التواصل",    sub: `${stats.messages} رسالة واردة`,       href: "/admin/collections/contact-messages" },
+    { label: "طلبات التوظيف",    sub: `${stats.applications} طلب للمراجعة`, href: "/admin/collections/job-applications" },
   ]
 
   const storeItems: SectionItem[] = [
-    { label: "الفئات والماركات", sub: "Categories & Brands", href: "/admin/collections/categories" },
-    { label: "المنتجات", sub: "Product Catalog", href: "/admin/collections/products" },
-    { label: "الكوبونات", sub: "Discount Codes", href: "/admin/collections/coupons" },
-    { label: "الطلبات", sub: `${stats.orders} طلب كلي`, href: "/admin/collections/orders" },
-    { label: "مناطق الشحن", sub: "Shipping Zones", href: "/admin/collections/shipping-zones" },
+    { label: "الفئات",         sub: "تصنيفات المنتجات",       href: "/admin/collections/categories" },
+    { label: "الماركات",       sub: "العلامات التجارية",      href: "/admin/collections/brands" },
+    { label: "المنتجات",       sub: "كتالوج المنتجات",        href: "/admin/collections/products" },
+    { label: "الكوبونات",      sub: "أكواد الخصم والعروض",    href: "/admin/collections/coupons" },
+    { label: "الطلبات",        sub: `${stats.orders} طلب كلي`, href: "/admin/collections/orders" },
+    { label: "مناطق الشحن",    sub: "مناطق ورسوم التوصيل",    href: "/admin/collections/shipping-zones" },
   ]
 
   const settingsItems: SectionItem[] = [
-    { label: "إعدادات الموقع", sub: "SiteSettings Global", href: "/admin/globals/site-settings" },
-    { label: "القائمة الجانبية والتذييل", sub: "Navigation Global", href: "/admin/globals/navigation" },
-    { label: "بوابات الدفع", sub: "Moyasar / Stripe / بنكي", href: "/admin/globals/payment-gateways" },
+    { label: "إعدادات الموقع",   sub: "الإعدادات العامة للموقع",   href: "/admin/globals/site-settings" },
+    { label: "القائمة والتذييل", sub: "روابط التنقل والتذييل",      href: "/admin/globals/navigation" },
+    { label: "بوابات الدفع",     sub: "موياسر / سترايب / بنكي",    href: "/admin/globals/payment-gateways" },
   ]
 
   const now = new Date()
   const dateAr = now.toLocaleDateString("ar-SA", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
 
   return (
-    <div style={{ padding: "32px", fontFamily: "'Tajawal', system-ui, sans-serif", direction: "rtl", background: C.bg, minHeight: "100vh" }}>
+    <div style={{
+      padding: "32px 36px",
+      fontFamily: "'Tajawal', system-ui, sans-serif",
+      direction: "rtl",
+      background: T.bg,
+      minHeight: "100vh",
+    }}>
 
-      {/* ── Page Header ─────────────────────────────────────────── */}
-      <div style={{ marginBottom: "2rem", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+      {/* ── Page Header ──────────────────────────────────────────────── */}
+      <div style={{ marginBottom: "28px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
         <div>
-          <div style={{ fontSize: "0.75rem", color: C.gray, marginBottom: "5px", fontWeight: 500 }}>
-            الصفحة الرئيسية &rsaquo; لوحة التحكم
+          <div style={{ fontSize: "0.72rem", color: T.textMuted, marginBottom: "6px", fontWeight: 500, display: "flex", alignItems: "center", gap: "6px" }}>
+            <span>الصفحة الرئيسية</span>
+            <span style={{ fontSize: "0.65rem" }}>›</span>
+            <span>لوحة التحكم</span>
           </div>
-          <h1 style={{ fontSize: "1.6rem", fontWeight: 900, color: C.navy, margin: 0, letterSpacing: "-0.02em" }}>
+          <h1 style={{ fontSize: "1.65rem", fontWeight: 900, color: T.text, margin: 0, letterSpacing: "-0.025em" }}>
             لوحة التحكم
           </h1>
         </div>
-        <div style={{ fontSize: "0.75rem", color: C.gray }}>{dateAr}</div>
+        <div style={{
+          background: T.white, border: `1px solid ${T.border}`, borderRadius: "10px",
+          padding: "8px 16px", fontSize: "0.75rem", color: T.textSub, fontWeight: 500,
+        }}>
+          {dateAr}
+        </div>
       </div>
 
-      {/* ── KPI Bar ─────────────────────────────────────────────── */}
-      <SummaryBar stats={stats} loading={loading} />
+      {/* ── KPI Stat Cards ────────────────────────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px", marginBottom: "24px" }}>
+        <StatCard label="إجمالي الطلبات"    value={stats.orders}    sub="كل الطلبات المسجلة"             icon="📦" />
+        <StatCard label="الإيرادات (SAR)"   value={loading ? "—" : fmtSAR(stats.revenue)} sub="الطلبات المدفوعة فقط"   icon="💰" />
+        <StatCard label="قيد الانتظار"      value={stats.pending}   sub="تحتاج إلى مراجعة"               icon="⏳" />
+        <StatCard label="عروض الأسعار"      value={stats.quotes}    sub="طلبات نشطة"                     icon="📋" />
+      </div>
 
-      {/* ── Section Cards ───────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 520px), 1fr))", gap: "1.5rem" }}>
+      {/* ── Analytics Data Table ──────────────────────────────────────── */}
+      <div style={{ marginBottom: "32px" }}>
+        <AnalyticsTable />
+      </div>
+
+      {/* ── Divider ───────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px", direction: "rtl" }}>
+        <div style={{ fontWeight: 700, fontSize: "0.9rem", color: T.textSub, whiteSpace: "nowrap" }}>إدارة المحتوى</div>
+        <div style={{ flex: 1, height: "1px", background: T.border }} />
+      </div>
+
+      {/* ── CMS Collections Grid ─────────────────────────────────────── */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 500px), 1fr))", gap: "20px" }}>
 
         {/* 1 — الإدارة */}
-        <SectionCard title="الإدارة" icon="🔐" items={adminItems} columns={2} />
+        <SectionCard title="الإدارة" emoji="🔐" items={adminItems} columns={2} />
 
         {/* 2 — محتوى الصفحات */}
-        <SectionCard title="محتوى الصفحات" icon="📄" items={pageContentItems} columns={2} />
+        <SectionCard title="محتوى الصفحات" emoji="📄" items={pageContentItems} columns={2} />
 
-        {/* 3 — المحتوى (3 columns for large list) */}
-        <SectionCard title="المحتوى" icon="✍️" items={contentItems} columns={3} />
+        {/* 3 — المحتوى (wide, 3 cols) */}
+        <div style={{ gridColumn: "1 / -1" }}>
+          <SectionCard title="المحتوى" emoji="✍️" items={contentItems} columns={3} />
+        </div>
 
-        {/* 4 — الطلبات والعملاء المحتملون  */}
-        <SectionCard title="الطلبات والعملاء المحتملون" icon="🎯" items={crmItems} columns={2}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "1px", background: C.border }}>
-            <KpiTile label="عروض أسعار" value={stats.quotes} color="#8B5CF6" />
-            <KpiTile label="مواعيد" value={stats.appointments} color="#10B981" />
-            <KpiTile label="رسائل" value={stats.messages} color="#3B82F6" />
-            <KpiTile label="طلبات توظيف" value={stats.applications} color={C.gold} />
-          </div>
+        {/* 4 — الطلبات والعملاء */}
+        <SectionCard title="الطلبات والعملاء المحتملون" emoji="🎯" items={crmItems} columns={2}>
+          <MiniKpiStrip items={[
+            { label: "عروض أسعار",    value: stats.quotes },
+            { label: "مواعيد",        value: stats.appointments },
+            { label: "رسائل",         value: stats.messages },
+            { label: "طلبات توظيف",  value: stats.applications },
+          ]} />
         </SectionCard>
 
         {/* 5 — المتجر الإلكتروني */}
-        <SectionCard title="المتجر الإلكتروني" icon="🛒" items={storeItems} columns={2}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "1px", background: C.border }}>
-            <KpiTile label="طلبات" value={stats.orders} color={C.navy} />
-            <KpiTile label="إيرادات" value={loading ? "..." : fmtSAR(stats.revenue)} color={C.gold} />
-            <KpiTile label="معلقة" value={stats.pending} color="#EF4444" />
-          </div>
+        <SectionCard title="المتجر الإلكتروني" emoji="🛒" items={storeItems} columns={2}>
+          <MiniKpiStrip items={[
+            { label: "طلبات",  value: stats.orders },
+            { label: "إيرادات", value: loading ? "—" : fmtSAR(stats.revenue) },
+            { label: "معلقة",  value: stats.pending },
+          ]} />
         </SectionCard>
 
         {/* 6 — الإعدادات */}
-        <SectionCard title="الإعدادات" icon="⚙️" items={settingsItems} columns={2} />
+        <SectionCard title="الإعدادات والنظام" emoji="⚙️" items={settingsItems} columns={2} />
 
       </div>
 
-      {/* Footer */}
-      <div style={{ textAlign: "center", color: C.gray, fontSize: "0.72rem", marginTop: "3rem", opacity: 0.5 }}>
-        إتحاد الريادة &copy; {new Date().getFullYear()} — جميع الحقوق محفوظة
+      {/* ── Footer ───────────────────────────────────────────────────── */}
+      <div style={{ textAlign: "center", color: T.textMuted, fontSize: "0.72rem", marginTop: "3.5rem", paddingBottom: "1rem" }}>
+        إتحاد الريادة &copy; {new Date().getFullYear()} — لوحة التحكم الإدارية
       </div>
     </div>
   )

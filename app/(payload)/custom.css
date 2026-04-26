@@ -1,270 +1,145 @@
 /* ================================================================
-   Etihad AlRaeda — Premium B2B Corporate Admin Theme
-   Payload CMS 3.x | RTL Arabic | Clean Corporate Identity
-   Deep Navy #172946 | Corporate Gold #B9995A | BG #F8F9FA
+   Etihad AlRaeda — Premium Light SaaS Admin Theme
+   Payload CMS 3.x
    ================================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
 
-/* ── Brand Tokens ─────────────────────────────────────────────── */
-:root {
-  --brand-navy: #172946;
-  --brand-navy-hover: #1e3a5f;
-  --brand-gold: #B9995A;
-  --brand-gold-light: rgba(185, 153, 90, 0.12);
-  --brand-gray: #AFAFB0;
-  --brand-bg: #F8F9FA;
-  --brand-card: #FFFFFF;
-  --brand-border: #E9ECEF;
-  --font-ar: 'Tajawal', 'Segoe UI', system-ui, sans-serif;
-
-  /* Payload native vars */
-  --color-success: #16a34a;
-}
-
-/* ── Override Payload theme vars to stay clean ───────────────── */
+/* ── Global Typography & Direction ────────────────────────────── */
 :root,
-[data-theme],
-[data-theme='dark'],
-[data-theme='light'] {
-  --theme-bg: var(--brand-bg) !important;
-  --theme-input-bg: #FFFFFF !important;
-  --theme-elevation-0: var(--brand-bg) !important;
-  --theme-elevation-100: #F0F2F5 !important;
-  --theme-elevation-150: var(--brand-border) !important;
-  --theme-elevation-200: var(--brand-border) !important;
-  --theme-text: var(--brand-navy) !important;
-  --theme-text-light: var(--brand-gray) !important;
-}
-
-/* ── Global body ──────────────────────────────────────────────── */
 body,
-html,
-.template-default,
-.payload-admin,
-main.template-default__content {
-  background-color: var(--brand-bg);
-  color: var(--brand-navy);
-  font-family: var(--font-ar);
+.payload-admin {
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+  direction: rtl; /* Enforce RTL globally for all Arabic text */
 }
 
-/* ================================================================
-   SIDEBAR — Deep Navy with Gold Active States
-   ================================================================ */
-.nav,
-nav.nav,
-.app__sidebar {
-  background: var(--brand-navy) !important;
-  border-left: none !important;
-  border-right: none !important;
+/* ── Light SaaS Theme Variables (Overrides Shadcn) ─────────────── */
+/* These variables override the dark ones bleeding from globals.css */
+:root, [data-theme='light'], [data-theme='dark'] {
+  --background: 210 20% 98%; /* #F8F9FA */
+  --foreground: 222.2 84% 4.9%; /* #111827 */
+
+  --card: 0 0% 100%; /* #FFFFFF */
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 222.2 47.4% 11.2%; /* #111827 */
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96.1%; /* #F3F4F6 */
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%; /* #6B7280 */
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 84.2% 60.2%; /* #EF4444 */
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%; /* #E5E7EB */
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+
+  --radius: 0.75rem;
+
+  /* Legacy Payload variables just in case */
+  --theme-bg: #F8F9FA;
+  --theme-elevation-0: #FFFFFF;
+  --theme-elevation-50: #FFFFFF;
+  --theme-elevation-100: #FFFFFF;
+  --theme-elevation-150: #FFFFFF;
+  --theme-elevation-200: #F3F4F6;
+  --theme-elevation-250: #E5E7EB;
+  --theme-elevation-300: #D1D5DB;
+  --theme-elevation-350: #9CA3AF;
+  --theme-elevation-400: #6B7280;
+  --theme-elevation-450: #4B5563;
+  --theme-elevation-500: #374151;
+  --theme-elevation-800: #111827;
+  --theme-elevation-900: #030712;
+  --theme-elevation-1000: #000000;
+  --theme-error-400: #EF4444;
+  --theme-error-500: #DC2626;
+  --theme-success-400: #10B981;
+  --theme-success-500: #059669;
+  --theme-warning-400: #F59E0B;
 }
 
-.nav__link,
-.nav-group__toggle {
-  font-family: var(--font-ar) !important;
-  font-size: 0.9rem !important;
-  font-weight: 500 !important;
-  color: rgba(255, 255, 255, 0.7) !important;
-  border-radius: 8px !important;
-  transition: all 0.2s ease !important;
-  direction: rtl !important;
-}
+/* ── Structural RTL Fixes for Payload CMS ──────────────────────── */
+/* Since Payload 3.x is mostly RTL-aware when the locale is Arabic, we 
+   only need minor overrides for the premium aesthetic. */
 
-.nav__link:hover {
-  color: #FFFFFF !important;
-  background-color: rgba(255, 255, 255, 0.08) !important;
+/* Tables (List view) */
+table {
+  border-collapse: collapse !important;
 }
-
-/* Active — Gold background */
-.nav__link--active,
-.nav__item--active>.nav__link {
-  background: var(--brand-gold) !important;
-  color: #FFFFFF !important;
+table th {
+  background: #F9FAFB !important; /* Soft gray header */
+  color: #374151 !important; /* Dark slate text */
   font-weight: 700 !important;
-  box-shadow: 0 4px 12px rgba(185, 153, 90, 0.35) !important;
-}
-
-.nav-group__label {
-  color: rgba(255, 255, 255, 0.4) !important;
-  font-size: 0.68rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.1em !important;
+  font-size: 0.8rem !important;
   text-transform: uppercase !important;
+  padding: 14px 20px !important;
+  text-align: right !important; /* RTL */
+  border-bottom: 2px solid #E5E7EB !important;
+}
+table td {
+  padding: 16px 20px !important;
+  font-size: 0.875rem !important;
+  color: #111827 !important;
+  text-align: right !important; /* RTL */
+  border-bottom: 1px solid #F3F4F6 !important;
+}
+table tbody tr:hover {
+  background: #F9FAFB !important;
+}
+
+/* Cards & Wrappers */
+.collection-list, .document-fields, .dashboard__wrap {
   direction: rtl !important;
 }
 
-.nav-group__indicator,
-.nav-group__toggle svg {
-  color: rgba(255, 255, 255, 0.4) !important;
-}
-
-/* Sidebar logo area */
-.nav__header,
-.payload-nav-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
-/* ================================================================
-   TOP HEADER — Clean White
-   ================================================================ */
-.app-header,
-[class*='app-header'] {
-  background: #FFFFFF !important;
-  border-bottom: 1px solid var(--brand-border) !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
-  direction: rtl !important;
-}
-
-/* ================================================================
-   DASHBOARD CARDS — Clean White Corporate Cards
-   ================================================================ */
-.dashboard .card,
-.collection-list .card,
-.card {
-  background: #FFFFFF !important;
-  border: 1px solid var(--brand-border) !important;
-  border-radius: 16px !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
-  transition: all 0.25s ease !important;
-}
-
-.dashboard .card:hover,
-.collection-list .card:hover {
-  transform: translateY(-3px) !important;
-  box-shadow: 0 8px 24px rgba(23, 41, 70, 0.1) !important;
-  border-color: var(--brand-gold) !important;
-}
-
-.card__title {
-  font-weight: 700 !important;
-  color: var(--brand-navy) !important;
-}
-
-.card__sub-title,
-.card__count {
-  color: var(--brand-gray) !important;
-  font-size: 0.82rem !important;
-}
-
-/* ================================================================
-   DASHBOARD GRID — Generous Spacing
-   ================================================================ */
-.dashboard__group {
-  margin-bottom: 3rem !important;
-}
-
-.dashboard__group-label,
-.dashboard__label,
-.dashboard__group h3 {
-  font-size: 1.1rem !important;
-  font-weight: 700 !important;
-  color: var(--brand-navy) !important;
-  margin-bottom: 1.25rem !important;
-  direction: rtl !important;
-}
-
-.dashboard__card-list {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important;
-  gap: 1.5rem !important;
-}
-
-/* ================================================================
-   TABLES — Clean Corporate
-   ================================================================ */
-.table th {
-  background: #F8F9FA !important;
-  color: var(--brand-navy) !important;
-  font-size: 0.78rem !important;
-  font-weight: 700 !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.06em !important;
-  border-bottom: 1px solid var(--brand-border) !important;
-}
-
-.table td {
-  border-bottom: 1px solid var(--brand-border) !important;
-  color: var(--brand-navy) !important;
-}
-
-.table tbody tr:hover td {
-  background: var(--brand-gold-light) !important;
-}
-
-/* ================================================================
-   FORMS & INPUTS
-   ================================================================ */
-.field-type input,
-.field-type textarea,
-.field-type select,
-.rs__control {
-  background: #F8F9FA !important;
-  border: 1px solid var(--brand-border) !important;
+/* Form Inputs */
+input[type="text"], input[type="email"], input[type="number"], input[type="password"], textarea, select {
+  background: #F3F4F6 !important; /* Soft gray */
+  border: 1px solid transparent !important;
   border-radius: 10px !important;
-  color: var(--brand-navy) !important;
-  font-family: var(--font-ar) !important;
+  color: #111827 !important;
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+  transition: all 0.2s ease !important;
+  direction: rtl;
+  text-align: right;
 }
-
-.field-type input:focus,
-.field-type textarea:focus,
-.rs__control--is-focused {
-  border-color: var(--brand-gold) !important;
-  box-shadow: 0 0 0 3px var(--brand-gold-light) !important;
+input:focus, textarea:focus, select:focus {
   background: #FFFFFF !important;
-  outline: none !important;
+  border-color: #111827 !important;
+  box-shadow: 0 0 0 3px rgba(17,24,39,0.1) !important;
 }
 
-.field-label {
-  color: var(--brand-navy) !important;
+/* Buttons */
+.btn--style-primary {
+  background: #111827 !important;
+  color: #FFFFFF !important;
+  border-radius: 10px !important;
+  font-family: 'Tajawal', system-ui, sans-serif !important;
+  font-weight: 700 !important;
+}
+.btn--style-primary:hover {
+  background: #374151 !important;
+}
+.btn--style-secondary {
+  background: #FFFFFF !important;
+  color: #374151 !important;
+  border: 1px solid #E5E7EB !important;
+  border-radius: 10px !important;
   font-weight: 600 !important;
-  font-size: 0.82rem !important;
 }
 
-/* ================================================================
-   BUTTONS — Corporate Navy / Gold
-   ================================================================ */
-.btn--style-primary,
-button[type='submit'].btn {
-  background: var(--brand-navy) !important;
-  border: none !important;
-  color: #fff !important;
-  font-weight: 700 !important;
-  font-family: var(--font-ar) !important;
-  border-radius: 10px !important;
-  transition: all 0.2s ease !important;
-}
-
-.btn--style-primary:hover,
-button[type='submit'].btn:hover {
-  background: var(--brand-gold) !important;
-  box-shadow: 0 4px 14px rgba(185, 153, 90, 0.4) !important;
-}
-
-/* ================================================================
-   PAGINATION
-   ================================================================ */
-.pagination__page--active {
-  background: var(--brand-gold) !important;
-  border-color: var(--brand-gold) !important;
-  color: #fff !important;
-}
-
-/* ================================================================
-   RTL
-   ================================================================ */
-.render-fields,
-.edit-depth-panel,
-.document-header,
-.collection-list__wrap,
-.dashboard__wrap {
+/* Document Header (Save / Publish area) */
+.document-header {
   direction: rtl !important;
-  text-align: right !important;
-}
-
-.step-nav {
-  direction: rtl !important;
-}
-
-.step-nav__chevron {
-  transform: scaleX(-1) !important;
 }

@@ -8,10 +8,27 @@ const AnalyticsNavLink: React.FC = () => {
     const { config: { routes: { admin } } } = useConfig()
 
     return (
-        <div className="nav__link">
-            <Link href={`${admin}/analytics`} style={{ textDecoration: 'none', color: '#currentColor' }}>
-                <div style={{ padding: '8px 0', borderTop: '1px solid var(--theme-elevation-150)', marginTop: '16px' }}>
-                    📊 الإحصائيات (Analytics)
+        <div className="nav__link" dir="rtl">
+            <Link
+                href={`${admin}/analytics`}
+                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
+            >
+                <div style={{
+                    padding: '10px 20px',
+                    borderTop: '1px solid var(--sl-border, #E5E7EB)',
+                    marginTop: '12px',
+                    fontSize: '0.88rem',
+                    fontWeight: 600,
+                    color: 'var(--sl-text-sub, #6B7280)',
+                    direction: 'rtl',
+                    textAlign: 'right',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-end',
+                    gap: '8px',
+                }}>
+                    <span>الإحصائيات والتقارير</span>
+                    <span>📊</span>
                 </div>
             </Link>
         </div>

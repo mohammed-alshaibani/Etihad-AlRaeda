@@ -6,6 +6,11 @@ export const ContactMessages: CollectionConfig = {
     useAsTitle: "name",
     defaultColumns: ["name", "email", "subject", "status", "createdAt"],
     group: "الطلبات والعملاء المحتملون",
+    components: {
+      views: {
+        list: { Component: "@/payload/components/CollectionListView" },
+      },
+    },
   },
   labels: {
     singular: { ar: "رسالة", en: "Message" },
