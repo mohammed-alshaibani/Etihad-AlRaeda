@@ -11,7 +11,12 @@ export const Categories: CollectionConfig = {
     singular: { ar: "تصنيف", en: "Category" },
     plural: { ar: "التصنيفات", en: "Categories" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: "name",

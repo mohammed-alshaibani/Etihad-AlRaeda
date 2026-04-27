@@ -14,6 +14,8 @@ export const Orders: CollectionConfig = {
   access: {
     read: ({ req: { user } }) => !!user,
     create: () => true,
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   hooks: {
     beforeValidate: [

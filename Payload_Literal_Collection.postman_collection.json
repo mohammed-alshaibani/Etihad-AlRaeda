@@ -1,0 +1,148 @@
+{
+    "info": {
+        "_postman_id": "ultimate-v3-literal",
+        "name": "Payload CMS — Etihad AlRaeda (Ultimate Literal)",
+        "description": "Full CRUD for all 27+ collections. URLs are literal (no variables) for 100% compatibility.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Auth & Users",
+            "item": [
+                {
+                    "name": "Admin Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"admin\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/api/users/login"
+                        }
+                    }
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "http://localhost:3000/api/users/logout"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Services",
+            "item": [
+                {
+                    "name": "List All",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/services"
+                        }
+                    }
+                },
+                {
+                    "name": "Create",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"New Service\",\n  \"_status\": \"published\"\n}"
+                        },
+                        "url": {
+                            "raw": "http://localhost:3000/api/services"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Content",
+            "item": [
+                {
+                    "name": "Portfolio (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/portfolio"
+                        }
+                    }
+                },
+                {
+                    "name": "Posts (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/posts"
+                        }
+                    }
+                },
+                {
+                    "name": "Team (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/team"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. E-Commerce",
+            "item": [
+                {
+                    "name": "Products (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/products"
+                        }
+                    }
+                },
+                {
+                    "name": "Orders (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/orders"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Leads & CRM",
+            "item": [
+                {
+                    "name": "Quote Requests (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/quote-requests"
+                        }
+                    }
+                },
+                {
+                    "name": "Appointments (List)",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "http://localhost:3000/api/appointments"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

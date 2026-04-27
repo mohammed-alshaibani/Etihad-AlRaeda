@@ -27,42 +27,21 @@ export interface AdminFormProps {
   loading?: boolean
 }
 
-const T = {
-  white: "#FFFFFF", pageBg: "#F8F9FA", inputBg: "#F3F4F6",
-  border: "#E5E7EB", borderLight: "#F3F4F6",
-  text: "#111827", textSub: "#6B7280", textMuted: "#9CA3AF",
-  font: "'Tajawal', system-ui, sans-serif",
-}
-
-function getInputStyle(focused: boolean, hasError: boolean): React.CSSProperties {
-  return {
-    width: "100%", padding: "10px 14px", borderRadius: "10px",
-    border: hasError ? "1.5px solid #EF4444" : focused ? "1.5px solid #111827" : "1.5px solid transparent",
-    background: focused ? T.white : T.inputBg,
-    boxShadow: focused ? "0 0 0 3px rgba(17,24,39,0.12)" : hasError ? "0 0 0 3px rgba(239,68,68,0.10)" : "none",
-    color: T.text, fontSize: "0.9rem", fontFamily: T.font,
-    direction: "rtl", textAlign: "right" as const, outline: "none",
-    transition: "all 0.18s ease", boxSizing: "border-box" as const, minHeight: "44px",
-  }
-}
-
 function Field({ field, value, onChange, touched, error }: {
   field: FormFieldDef; value: any; onChange: (val: any) => void; touched: boolean; error?: string
 }) {
-  const [focused, setFocused] = useState(false)
   const hasError = !!error && touched
-  const inputStyle = getInputStyle(focused, hasError)
-  const fp = { onFocus: () => setFocused(true), onBlur: () => setFocused(false) }
+  const baseClass = `w-full px-3 py-2 rounded-lg bg-gray-50 border ${hasError ? 'border-red-500' : 'border-transparent'} focus:outline-none focus:ring-2 focus:ring-slate-800 text-sm font-medium transition-all text-start`
 
   if (field.type === "checkbox") {
     return (
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", direction: "rtl", paddingBlockStart: "8px" }}>
+      <div className="flex items-center gap-2.5 pt-2">
         <input type="checkbox" id={field.name} checked={!!value}
           onChange={e => onChange(e.target.checked)}
-          style={{ width: "18px", height: "18px", accentColor: T.text, cursor: "pointer" }} />
-        <label htmlFor={field.name} style={{ fontSize: "0.9rem", color: T.textSub, fontWeight: 500, cursor: "pointer", fontFamily: T.font }}>
+          className="w-5 h-5 accent-slate-900 cursor-pointer" />
+        <label htmlFor={field.name} className="text-sm text-gray-600 font-bold cursor-pointer">
           {field.label}
-          {field.required && <span style={{ color: "#EF4444", marginInlineStart: "4px" }}>*</span>}
+          {field.required && <span className="text-red-500 ms-1">*</span>}
         </label>
       </div>
     )
@@ -71,15 +50,15 @@ function Field({ field, value, onChange, touched, error }: {
   if (field.type === "textarea") {
     return (
       <textarea id={field.name} value={value ?? ""} placeholder={field.placeholder}
-        required={field.required} {...fp} onChange={e => onChange(e.target.value)}
-        rows={4} style={{ ...inputStyle, resize: "vertical", minHeight: "110px" }} />
+        required={field.required} onChange={e => onChange(e.target.value)}
+        rows={4} className={`${baseClass} min-h-[110px] resize-y`} />
     )
   }
 
   if (field.type === "select") {
     return (
       <select id={field.name} value={value ?? ""} required={field.required}
-        {...fp} onChange={e => onChange(e.target.value)} style={{ ...inputStyle, cursor: "pointer" }}>
+        onChange={e => onChange(e.target.value)} className={`${baseClass} h-11 cursor-pointer appearance-none`}>
         <option value="">{field.placeholder ?? "اختر..."}</option>
         {field.options?.map(opt => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
       </select>
@@ -93,29 +72,21 @@ function Field({ field, value, onChange, touched, error }: {
         onDragOver={e => { e.preventDefault(); setDragging(true) }}
         onDragLeave={() => setDragging(false)}
         onDrop={e => { e.preventDefault(); setDragging(false); onChange(e.dataTransfer.files[0]) }}
-        style={{
-          border: `2px dashed ${dragging ? T.text : T.border}`, borderRadius: "12px",
-          padding: "28px 16px", textAlign: "center", background: dragging ? "#F0F0F2" : T.inputBg,
-          cursor: "pointer", transition: "all 0.2s ease", direction: "rtl",
-        }}
+        className={`border-2 border-dashed rounded-xl p-7 text-center cursor-pointer transition-all ${dragging ? "border-slate-800 bg-gray-100" : "border-gray-200 bg-gray-50 hover:bg-gray-100"}`}
       >
-        <label htmlFor={field.name} style={{ cursor: "pointer", display: "block" }}>
-          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke={T.textMuted}
-            strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" style={{ margin: "0 auto 12px" }}>
+        <label htmlFor={field.name} className="cursor-pointer block">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF"
+            strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-3">
             <polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" />
             <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3" />
           </svg>
-          <p style={{ fontWeight: 700, color: T.text, fontSize: "0.9rem", margin: "0 0 4px", fontFamily: T.font }}>
-            اسحب وأفلت الملفات هنا
-          </p>
-          <p style={{ color: T.textSub, fontSize: "0.8rem", margin: 0, fontFamily: T.font }}>
-            أو <span style={{ color: T.text, fontWeight: 700, textDecoration: "underline" }}>تصفح</span> من جهازك
-          </p>
-          <input id={field.name} type="file" style={{ display: "none" }}
+          <p className="font-bold text-gray-900 text-sm mb-1">اسحب وأفلت الملفات هنا</p>
+          <p className="text-gray-500 text-xs">أو <span className="text-gray-900 font-bold underline">تصفح</span> من جهازك</p>
+          <input id={field.name} type="file" className="hidden"
             onChange={e => onChange(e.target.files?.[0])} />
         </label>
         {value?.name && (
-          <p style={{ marginBlockStart: "12px", fontSize: "0.8rem", color: T.text, fontFamily: T.font }}>✓ {value.name}</p>
+          <p className="mt-3 text-sm font-bold text-gray-900">✓ {value.name}</p>
         )}
       </div>
     )
@@ -123,7 +94,7 @@ function Field({ field, value, onChange, touched, error }: {
 
   return (
     <input id={field.name} type={field.type} value={value ?? ""} placeholder={field.placeholder}
-      required={field.required} {...fp} onChange={e => onChange(e.target.value)} style={inputStyle} />
+      required={field.required} onChange={e => onChange(e.target.value)} className={`${baseClass} h-11`} />
   )
 }
 
@@ -160,41 +131,27 @@ export function AdminForm({
   const isLoading = loading || submitLoading
 
   return (
-    <div style={{
-      background: T.white, borderRadius: "20px", border: `1px solid ${T.border}`,
-      boxShadow: "0 1px 3px rgba(0,0,0,0.07)", padding: "32px",
-      fontFamily: T.font, direction: "rtl",
-    }}>
+    <div dir="rtl" className="bg-white rounded-xl shadow-sm p-6 md:p-8 font-sans">
       {(title || subtitle) && (
-        <div style={{ marginBlockEnd: "28px", paddingBlockEnd: "20px", borderBottom: `1px solid ${T.borderLight}` }}>
-          {title && <h2 style={{ fontSize: "1.15rem", fontWeight: 800, color: T.text, margin: "0 0 6px", textAlign: "start" }}>{title}</h2>}
-          {subtitle && <p style={{ fontSize: "0.875rem", color: T.textSub, margin: 0 }}>{subtitle}</p>}
+        <div className="mb-6 pb-5 border-b border-gray-100 text-start">
+          {title && <h2 className="text-xl font-bold text-gray-900 mb-1.5">{title}</h2>}
+          {subtitle && <p className="text-sm text-gray-500 m-0">{subtitle}</p>}
         </div>
       )}
 
       <form onSubmit={handleSubmit} noValidate>
-        {/* 1 col on mobile → 2 cols on desktop */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
-          gap: "20px 28px",
-        }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {fields.map(field => {
             const error = getError(field)
+            const isLocalized = field.name.endsWith('.ar') || field.name.endsWith('.en')
+            const colSpanClass = field.colSpan === 2 || !isLocalized ? "col-span-full" : "col-span-1"
+
             return (
-              <div key={field.name} style={{
-                gridColumn: field.colSpan === 2 ? "1 / -1" : undefined,
-                display: "flex", flexDirection: "column", gap: "6px",
-              }}>
+              <div key={field.name} className={`flex flex-col gap-1.5 ${colSpanClass}`}>
                 {field.type !== "checkbox" && (
-                  <label htmlFor={field.name} style={{
-                    display: "flex", alignItems: "center",
-                    justifyContent: "flex-end",   // right side in RTL = text-start
-                    gap: "4px", fontWeight: 700, fontSize: "0.82rem", color: T.text,
-                  }}>
-                    {/* * sits on the logical far side (left in RTL) */}
-                    {field.required && <span style={{ color: "#EF4444", fontSize: "0.9rem", order: -1 }}>*</span>}
+                  <label htmlFor={field.name} className="text-start font-bold text-sm text-gray-900">
                     {field.label}
+                    {field.required && <span className="text-red-500 ms-1">*</span>}
                   </label>
                 )}
 
@@ -204,57 +161,40 @@ export function AdminForm({
                   touched={!!touched[field.name]} error={error}
                 />
 
-                {error
-                  ? <span style={{ fontSize: "0.75rem", color: "#EF4444", textAlign: "end" }}>{error}</span>
-                  : field.hint
-                    ? <span style={{ fontSize: "0.75rem", color: T.textMuted, textAlign: "end" }}>{field.hint}</span>
-                    : null}
+                {error ? (
+                  <span className="text-xs font-semibold text-red-500 text-start">{error}</span>
+                ) : field.hint ? (
+                  <span className="text-xs text-gray-500 text-start">{field.hint}</span>
+                ) : null}
               </div>
             )
           })}
         </div>
 
-        <div style={{ height: "1px", background: T.borderLight, margin: "28px 0 20px" }} />
+        <div className="h-px bg-gray-100 my-6" />
 
-        {/* Action row — logical direction, submit on inline-end */}
-        <div style={{ display: "flex", gap: "12px", justifyContent: "flex-start", flexDirection: "row-reverse" }}>
-          {/* Primary: bg-slate-900 text-white */}
-          <button type="submit" disabled={isLoading} style={{
-            background: isLoading ? "#374151" : T.text, color: "#FFFFFF", border: "none",
-            borderRadius: "10px", padding: "10px 28px", fontWeight: 700, fontSize: "0.9rem",
-            fontFamily: T.font, cursor: isLoading ? "not-allowed" : "pointer",
-            transition: "background 0.18s ease", display: "flex", alignItems: "center",
-            gap: "8px", minHeight: "44px",
-          }}>
-            {isLoading
-              ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth={2} style={{ animation: "adminSpin 1s linear infinite" }}>
-                  <path d="M21 12a9 9 0 11-6.219-8.56" />
-                </svg>
-              : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                  strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>}
+        <div className="flex gap-3 justify-start flex-row-reverse">
+          <button type="submit" disabled={isLoading} className={`flex items-center justify-center gap-2 px-6 h-11 rounded-lg font-bold text-sm text-white transition-colors duration-200 ${isLoading ? 'bg-gray-600 cursor-not-allowed' : 'bg-slate-900 hover:bg-slate-800'}`}>
+            {isLoading ? (
+              <svg className="w-4 h-4 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            )}
             {isLoading ? "جار الحفظ..." : submitLabel}
           </button>
 
-          {/* Secondary: outline */}
           {onCancel && (
-            <button type="button" onClick={onCancel} disabled={isLoading} style={{
-              background: T.white, color: "#374151", border: `1px solid ${T.border}`,
-              borderRadius: "10px", padding: "10px 24px", fontWeight: 600, fontSize: "0.9rem",
-              fontFamily: T.font, cursor: "pointer", transition: "background 0.18s ease", minHeight: "44px",
-            }}
-              onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.background = T.pageBg)}
-              onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.background = T.white)}
-            >
+            <button type="button" onClick={onCancel} disabled={isLoading} className="px-6 h-11 rounded-lg font-bold text-sm text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
               إلغاء
             </button>
           )}
         </div>
       </form>
-
-      <style>{`@keyframes adminSpin { to { transform: rotate(360deg); } }`}</style>
     </div>
   )
 }

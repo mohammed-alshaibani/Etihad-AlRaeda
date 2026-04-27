@@ -12,7 +12,12 @@ export const Products: CollectionConfig = {
     singular: { ar: "منتج", en: "Product" },
     plural: { ar: "المنتجات", en: "Products" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     // ─── Core Info ────────────────────────────────────────────────────────
     {

@@ -24,6 +24,10 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { default as default_48a1986f7d7caf792ce361211220f8e9 } from '@/payload/components/CollectionListView'
 import { default as default_426b9adc6effeef755969bed39396702 } from '@/payload/components/CustomSidebar'
 import { default as default_bb3da373256db406750e6c68297e7e7f } from '@/payload/components/AdminDashboard'
+import { default as default_68c95a05e28bc532a74df1c4341964fd } from '@/payload/components/CustomLogin'
+import { default as default_0286c517f88b3b3ceeabf93a3dd2f336 } from '@/payload/components/hubs/CommerceHub'
+import { default as default_5d8201a845bd743912c755b31e1ff8ce } from '@/payload/components/hubs/WebsiteHub'
+import { default as default_638770dde8b50e673a76cd903becd418 } from '@/payload/components/hubs/SystemHub'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -54,5 +58,9 @@ export const importMap = {
   "@/payload/components/CollectionListView#default": default_48a1986f7d7caf792ce361211220f8e9,
   "@/payload/components/CustomSidebar#default": default_426b9adc6effeef755969bed39396702,
   "@/payload/components/AdminDashboard#default": default_bb3da373256db406750e6c68297e7e7f,
+  "@/payload/components/CustomLogin#default": default_68c95a05e28bc532a74df1c4341964fd,
+  "@/payload/components/hubs/CommerceHub#default": default_0286c517f88b3b3ceeabf93a3dd2f336,
+  "@/payload/components/hubs/WebsiteHub#default": default_5d8201a845bd743912c755b31e1ff8ce,
+  "@/payload/components/hubs/SystemHub#default": default_638770dde8b50e673a76cd903becd418,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

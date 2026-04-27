@@ -11,7 +11,12 @@ export const Brands: CollectionConfig = {
         singular: { ar: "علامة تجارية", en: "Brand" },
         plural: { ar: "العلامات التجارية", en: "Brands" },
     },
-    access: { read: () => true },
+      access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
     fields: [
         {
             name: "name",

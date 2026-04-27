@@ -80,6 +80,21 @@ export default buildConfig({
         dashboard: {
           Component: "@/payload/components/AdminDashboard",
         },
+        login: {
+          Component: "@/payload/components/CustomLogin",
+        },
+        commerce: {
+          Component: "@/payload/components/hubs/CommerceHub",
+          path: "/commerce",
+        },
+        website: {
+          Component: "@/payload/components/hubs/WebsiteHub",
+          path: "/website",
+        },
+        system: {
+          Component: "@/payload/components/hubs/SystemHub",
+          path: "/system",
+        },
       },
     },
   },
@@ -137,6 +152,10 @@ export default buildConfig({
   globals: [SiteSettings, Homepage, AboutPage, Navigation, PaymentGateways],
   // ─── Config ───────────────────────────────────────────────────────────────
   secret: process.env.PAYLOAD_SECRET || "CHANGE-ME-IN-PRODUCTION-VERY-LONG-SECRET",
+  csrf: [
+    process.env.SERVER_URL || 'http://localhost:3000',
+    'http://localhost:3001', // Keep as fallback
+  ],
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
@@ -144,3 +163,4 @@ export default buildConfig({
   sharp,
   telemetry: false,
 })
+

@@ -23,7 +23,12 @@ export const Posts: CollectionConfig = {
     singular: { ar: "مقالة", en: "Post" },
     plural: { ar: "المدوّنة", en: "Blog" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   versions: {
     drafts: true,
   },

@@ -4,7 +4,10 @@ export const SiteSettings: GlobalConfig = {
   slug: "site-settings",
   label: { ar: "إعدادات الموقع", en: "Site Settings" },
   admin: { group: "الإعدادات" },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    update: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: "brand",

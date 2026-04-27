@@ -12,7 +12,12 @@ export const Offers: CollectionConfig = {
     singular: { ar: "عرض", en: "Offer" },
     plural: { ar: "العروض والباقات", en: "Offers & Packages" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "title", type: "text", required: true, localized: true, label: { ar: "عنوان العرض", en: "Title" } },
     { name: "slug", type: "text", required: true, unique: true, label: { ar: "المعرّف", en: "Slug" } },

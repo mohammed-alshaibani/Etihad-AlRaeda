@@ -1,0 +1,172 @@
+{
+    "info": {
+        "_postman_id": "ultimate-v2-crud-fix",
+        "name": "Payload CMS — Etihad AlRaeda (Full CRUD FIX)",
+        "description": "Full CRUD for all collections and globals with pre-populated test data and {{baseUrl}} variables.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Auth & Users",
+            "item": [
+                {
+                    "name": "Admin Login",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"admin@admin.com\",\n  \"password\": \"admin\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/login"
+                        }
+                    }
+                },
+                {
+                    "name": "Create User",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"new-admin@etihad.com\",\n  \"password\": \"admin123\",\n  \"role\": \"content-editor\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users"
+                        }
+                    }
+                },
+                {
+                    "name": "Me",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/users/me"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Services",
+            "item": [
+                {
+                    "name": "List All",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{baseUrl}}/api/services"
+                        }
+                    }
+                },
+                {
+                    "name": "Create Service",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": { \"ar\": \"الاستشارات الإدارية\", \"en\": \"Management Consulting\" },\n  \"slug\": \"management-consulting\",\n  \"icon\": \"Briefcase\",\n  \"order\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/services"
+                        }
+                    }
+                },
+                {
+                    "name": "Update Service",
+                    "request": {
+                        "method": "PATCH",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": { \"ar\": \"الاستشارات الإدارية المحدثة\" },\n  \"isFeatured\": true\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/services/{{recordId}}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Media",
+            "item": [
+                {
+                    "name": "Upload Media",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "file",
+                                    "type": "file",
+                                    "src": []
+                                },
+                                {
+                                    "key": "alt",
+                                    "value": "Test Media",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/media"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Content & Dynamic Pages",
+            "item": [
+                {
+                    "name": "Create Dynamic Page",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": { \"ar\": \"عن الشركة\", \"en\": \"About Company\" },\n  \"slug\": \"about-company\",\n  \"status\": \"published\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/dynamic-pages"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Globals",
+            "item": [
+                {
+                    "name": "Update Homepage",
+                    "request": {
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"about\": {\n    \"title\": { \"ar\": \"مرحبا بكم في الاتحاد الرائدة\" }\n  }\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/globals/homepage"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "recordId",
+            "value": "1",
+            "type": "string"
+        },
+        {
+            "key": "mediaId",
+            "value": "1",
+            "type": "string"
+        }
+    ]
+}

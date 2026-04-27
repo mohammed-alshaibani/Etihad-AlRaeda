@@ -6,26 +6,18 @@ export const Users: CollectionConfig = {
     useAsTitle: "email",
     group: "الإدارة",
     defaultColumns: ["email", "name", "role", "createdAt"],
+    hidden: true,
   },
   auth: true,
   labels: {
     singular: { ar: "مستخدم", en: "User" },
-    plural: { ar: "المستخدمون", en: "Users" },
+    plural: { ar: "المستخدمين", en: "Users" },
   },
   access: {
-    // Only superadmin can read all users; others only themselves
-    read: ({ req: { user } }) => {
-      if (!user) return false
-      if (user.role === "superadmin") return true
-      return { id: { equals: user.id } }
-    },
-    create: () => true,
-    update: ({ req: { user } }) => {
-      if (!user) return false
-      if (user.role === "superadmin") return true
-      return { id: { equals: user.id } }
-    },
-    delete: ({ req: { user } }) => user?.role === "superadmin",
+    read: ({ req: { user } }) => Boolean(user),
+    create: ({ req: { user } }) => user?.role === "admin",
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => user?.role === "admin",
   },
   fields: [
     {
@@ -36,19 +28,14 @@ export const Users: CollectionConfig = {
     {
       name: "role",
       type: "select",
-      label: { ar: "الصلاحية", en: "Role" },
-      defaultValue: "content-editor",
-      required: true,
+      defaultValue: "editor",
       options: [
-        { label: { ar: "مدير عام", en: "Superadmin" }, value: "superadmin" },
-        { label: { ar: "مدير مبيعات", en: "Sales Manager" }, value: "sales-manager" },
-        { label: { ar: "محرر محتوى", en: "Content Editor" }, value: "content-editor" },
+        { label: "Admin", value: "admin" },
+        { label: "Editor", value: "editor" },
       ],
-      admin: {
-        description: "superadmin: كامل الصلاحيات | sales-manager: الطلبات والعملاء | content-editor: المحتوى فقط",
-        // Only superadmin can change roles
-        condition: (_, siblingData, { user }: any) => user?.role === "superadmin",
-      },
+      required: true,
+      saveToJWT: true,
+      label: { ar: "الصلاحية", en: "Role" },
     },
   ],
 }

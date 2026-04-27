@@ -4,7 +4,10 @@ export const Navigation: GlobalConfig = {
   slug: "navigation",
   label: { ar: "القائمة والتذييل", en: "Navigation & Footer" },
   admin: { group: "الإعدادات" },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    update: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: "mainMenu",

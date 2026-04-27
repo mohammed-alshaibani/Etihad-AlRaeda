@@ -10,136 +10,211 @@
 body,
 .payload-admin {
   font-family: 'Tajawal', system-ui, sans-serif !important;
-  direction: rtl; /* Enforce RTL globally for all Arabic text */
+  direction: rtl;
+  /* Enforce RTL globally for all Arabic text */
 }
 
-/* ── Light SaaS Theme Variables (Overrides Shadcn) ─────────────── */
-/* These variables override the dark ones bleeding from globals.css */
-:root, [data-theme='light'], [data-theme='dark'] {
-  --background: 210 20% 98%; /* #F8F9FA */
-  --foreground: 222.2 84% 4.9%; /* #111827 */
-
-  --card: 0 0% 100%; /* #FFFFFF */
-  --card-foreground: 222.2 84% 4.9%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-
-  --primary: 222.2 47.4% 11.2%; /* #111827 */
-  --primary-foreground: 210 40% 98%;
-
-  --secondary: 210 40% 96.1%; /* #F3F4F6 */
-  --secondary-foreground: 222.2 47.4% 11.2%;
-
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%; /* #6B7280 */
-
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-
-  --destructive: 0 84.2% 60.2%; /* #EF4444 */
-  --destructive-foreground: 210 40% 98%;
-
-  --border: 214.3 31.8% 91.4%; /* #E5E7EB */
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
-
-  --radius: 0.75rem;
-
-  /* Legacy Payload variables just in case */
-  --theme-bg: #F8F9FA;
-  --theme-elevation-0: #FFFFFF;
-  --theme-elevation-50: #FFFFFF;
-  --theme-elevation-100: #FFFFFF;
-  --theme-elevation-150: #FFFFFF;
-  --theme-elevation-200: #F3F4F6;
-  --theme-elevation-250: #E5E7EB;
-  --theme-elevation-300: #D1D5DB;
-  --theme-elevation-350: #9CA3AF;
-  --theme-elevation-400: #6B7280;
-  --theme-elevation-450: #4B5563;
-  --theme-elevation-500: #374151;
-  --theme-elevation-800: #111827;
-  --theme-elevation-900: #030712;
-  --theme-elevation-1000: #000000;
-  --theme-error-400: #EF4444;
-  --theme-error-500: #DC2626;
-  --theme-success-400: #10B981;
-  --theme-success-500: #059669;
-  --theme-warning-400: #F59E0B;
+/* Typography Overrides */
+.payload-admin h1,
+.payload-admin h2,
+.payload-admin h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
-/* ── Structural RTL Fixes for Payload CMS ──────────────────────── */
-/* Since Payload 3.x is mostly RTL-aware when the locale is Arabic, we 
-   only need minor overrides for the premium aesthetic. */
+.payload-admin label.field-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-align: start;
+  display: block;
+  margin-bottom: 0.25rem;
+}
 
-/* Tables (List view) */
-table {
+.payload-admin .field-description,
+.payload-admin .table-cell {
+  font-size: 0.875rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* ── Form Layout (Localized & Standard Fields) ────────────────── */
+/* Applying CSS Grid to Payload's field renderer */
+.payload-admin .render-fields {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .payload-admin .render-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* By default, fields span the full width */
+.payload-admin .render-fields>.field-type {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Localized fields side-by-side (RTL implicitly puts Arabic on right, English on left) */
+.payload-admin .render-fields>.field-type.localized,
+.payload-admin .render-fields>.field-type.half-width {
+  grid-column: span 1 / span 1;
+}
+
+/* ── Standard Input Layout & Aesthetics ───────────────────────── */
+.payload-admin input[type="text"],
+.payload-admin input[type="email"],
+.payload-admin input[type="number"],
+.payload-admin input[type="password"],
+.payload-admin textarea,
+.payload-admin select,
+.payload-admin .react-select__control {
+  height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9fafb;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  direction: rtl;
+  text-align: start;
+}
+
+.payload-admin input:focus,
+.payload-admin textarea:focus,
+.payload-admin select:focus,
+.payload-admin .react-select__control--is-focused {
+  background-color: #ffffff !important;
+  box-shadow: 0 0 0 2px #1e293b, 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+  border-color: transparent !important;
+  outline: none !important;
+}
+
+/* ── Tables Aesthetics ────────────────────────────────────────── */
+.payload-admin .collection-list__table,
+.payload-admin table {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  border: none;
+  overflow: hidden;
+  width: 100%;
   border-collapse: collapse !important;
 }
-table th {
-  background: #F9FAFB !important; /* Soft gray header */
-  color: #374151 !important; /* Dark slate text */
-  font-weight: 700 !important;
-  font-size: 0.8rem !important;
-  text-transform: uppercase !important;
-  padding: 14px 20px !important;
-  text-align: right !important; /* RTL */
-  border-bottom: 2px solid #E5E7EB !important;
-}
-table td {
-  padding: 16px 20px !important;
-  font-size: 0.875rem !important;
-  color: #111827 !important;
-  text-align: right !important; /* RTL */
-  border-bottom: 1px solid #F3F4F6 !important;
-}
-table tbody tr:hover {
-  background: #F9FAFB !important;
+
+.payload-admin table thead {
+  background-color: #f9fafb;
 }
 
-/* Cards & Wrappers */
-.collection-list, .document-fields, .dashboard__wrap {
+.payload-admin table th {
+  padding: 0.75rem 1rem;
+  text-align: start;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.payload-admin table td {
+  padding: 1rem;
+  text-align: start;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #475569;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.payload-admin table tbody tr:hover {
+  background-color: rgba(249, 250, 251, 0.5);
+  transition: background-color 0.2s ease;
+}
+
+/* ── Table Actions (Delete Button) ────────────────────────────── */
+.payload-admin .row-actions button.delete,
+.payload-admin .cell-actions .delete-button {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payload-admin .row-actions button.delete:hover,
+.payload-admin .cell-actions .delete-button:hover {
+  background-color: #fee2e2;
+}
+
+/* ── RTL Alignments ───────────────────────────────────────────── */
+.payload-admin .document-fields,
+.payload-admin .dashboard__wrap,
+.payload-admin .collection-list,
+.payload-admin .document-header {
+  text-align: start;
   direction: rtl !important;
 }
 
-/* Form Inputs */
-input[type="text"], input[type="email"], input[type="number"], input[type="password"], textarea, select {
-  background: #F3F4F6 !important; /* Soft gray */
-  border: 1px solid transparent !important;
-  border-radius: 10px !important;
-  color: #111827 !important;
-  font-family: 'Tajawal', system-ui, sans-serif !important;
-  transition: all 0.2s ease !important;
-  direction: rtl;
-  text-align: right;
-}
-input:focus, textarea:focus, select:focus {
-  background: #FFFFFF !important;
-  border-color: #111827 !important;
-  box-shadow: 0 0 0 3px rgba(17,24,39,0.1) !important;
+/* Force standard action buttons to match height */
+.payload-admin .btn {
+  height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Buttons */
-.btn--style-primary {
-  background: #111827 !important;
-  color: #FFFFFF !important;
-  border-radius: 10px !important;
-  font-family: 'Tajawal', system-ui, sans-serif !important;
-  font-weight: 700 !important;
-}
-.btn--style-primary:hover {
-  background: #374151 !important;
-}
-.btn--style-secondary {
-  background: #FFFFFF !important;
-  color: #374151 !important;
-  border: 1px solid #E5E7EB !important;
-  border-radius: 10px !important;
-  font-weight: 600 !important;
+.payload-admin .btn--style-primary {
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 1px solid transparent;
 }
 
-/* Document Header (Save / Publish area) */
-.document-header {
-  direction: rtl !important;
+.payload-admin .btn--style-primary:hover {
+  background-color: #1e293b;
+}
+
+.payload-admin .btn--style-secondary {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e5e7eb;
+}
+
+.payload-admin .btn--style-secondary:hover {
+  background-color: #f9fafb;
+}
+
+/* ── TASK 1: Hide Redundant Burger Menu ───────────────────────── */
+.template-default__header .menu-button,
+.header__mobile-menu-button {
+  display: none !important;
+}
+
+/* ── TASK 3: Restrict Media Upload Fields ─────────────────────── */
+.file-field .file-field__upload .file-field__upload-actions .btn--style-primary,
+.file-field .file-field__upload .dropzone {
+  display: none !important;
+}
+
+/* ── TASK 4: Form width constriction ─────────────────────────── */
+.payload-admin .document-fields {
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding-bottom: 4rem;
+}
+
+.payload-admin .document-header__title {
+  max-width: 1000px;
+  margin: 0 auto;
 }

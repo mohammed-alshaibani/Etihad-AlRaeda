@@ -11,7 +11,12 @@ export const Testimonials: CollectionConfig = {
     singular: { ar: "شهادة عميل", en: "Testimonial" },
     plural: { ar: "شهادات العملاء", en: "Testimonials" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "author", type: "text", required: true, localized: true, label: { ar: "الاسم", en: "Author" } },
     { name: "role", type: "text", localized: true, label: { ar: "المنصب", en: "Role" } },

@@ -5,7 +5,10 @@ export const Homepage: GlobalConfig = {
   slug: "homepage",
   label: { ar: "الصفحة الرئيسية", en: "Homepage" },
   admin: { group: "محتوى الصفحات" },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    update: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: "heroSlides",

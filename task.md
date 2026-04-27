@@ -81,6 +81,8 @@
 
 ## Phase 5 — RFQ System & Customer Accounts (Week 6–8)
 
+**Current Phase: COMPLETED**
+Next focus: Phase 5 (RFQ & Customer Accounts)
 - [ ] **5.1** Build `/request-quote` form (company info, quote items, file upload → Payload API)
 - [ ] **5.2** Add "Add to Quote" button on product pages → `QuoteCartContext`
 - [ ] **5.3** Customer auth: `/login`, `/register` pages + `middleware.ts` for protected routes

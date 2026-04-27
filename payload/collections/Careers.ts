@@ -19,7 +19,12 @@ export const Careers: CollectionConfig = {
     singular: { ar: "وظيفة", en: "Job" },
     plural: { ar: "الوظائف", en: "Careers" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   hooks: {
     beforeValidate: [
       ({ data, operation }) => {

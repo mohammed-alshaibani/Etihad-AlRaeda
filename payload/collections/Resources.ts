@@ -11,7 +11,12 @@ export const Resources: CollectionConfig = {
     singular: { ar: "مورد / ملف", en: "Resource" },
     plural: { ar: "المكتبة", en: "Library" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "title", type: "text", required: true, localized: true, label: { ar: "العنوان", en: "Title" } },
     { name: "slug", type: "text", required: true, unique: true, label: { ar: "المعرّف", en: "Slug" } },

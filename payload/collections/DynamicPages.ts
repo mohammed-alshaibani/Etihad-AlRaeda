@@ -17,7 +17,12 @@ export const DynamicPages: CollectionConfig = {
         singular: { ar: "صفحة ديناميكية", en: "Dynamic Page" },
         plural: { ar: "الصفحات الديناميكية", en: "Dynamic Pages" },
     },
-    access: { read: () => true },
+      access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
     versions: {
         drafts: true,
     },

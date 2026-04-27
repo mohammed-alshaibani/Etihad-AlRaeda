@@ -7,7 +7,12 @@ export const FAQs: CollectionConfig = {
     singular: { ar: "سؤال شائع", en: "FAQ" },
     plural: { ar: "الأسئلة الشائعة", en: "FAQs" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "question", type: "text", required: true, localized: true, label: { ar: "السؤال", en: "Question" } },
     { name: "answer", type: "textarea", required: true, localized: true, label: { ar: "الإجابة", en: "Answer" } },

@@ -12,7 +12,12 @@ export const HeroSlides: CollectionConfig = {
         singular: { ar: "شريحة رئيسية", en: "Hero Slide" },
         plural: { ar: "شرائح القسم الرئيسي", en: "Hero Slides" },
     },
-    access: { read: () => true },
+      access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
     fields: [
         {
             name: "headline",

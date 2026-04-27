@@ -7,7 +7,12 @@ export const Partners: CollectionConfig = {
     singular: { ar: "شريك / عميل", en: "Partner" },
     plural: { ar: "الشركاء والعملاء", en: "Partners & Clients" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "name", type: "text", required: true, localized: true, label: { ar: "الاسم", en: "Name" } },
     { name: "logo", type: "upload", relationTo: "media", label: { ar: "الشعار", en: "Logo" } },

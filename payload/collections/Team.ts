@@ -11,7 +11,12 @@ export const Team: CollectionConfig = {
     singular: { ar: "عضو فريق", en: "Team Member" },
     plural: { ar: "فريق العمل", en: "Team Members" },
   },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     { name: "name", type: "text", required: true, localized: true, label: { ar: "الاسم", en: "Name" } },
     { name: "role", type: "text", localized: true, label: { ar: "المنصب", en: "Role" } },

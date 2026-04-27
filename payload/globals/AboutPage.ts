@@ -5,7 +5,10 @@ export const AboutPage: GlobalConfig = {
   slug: "about-page",
   label: { ar: "صفحة (من نحن)", en: "About Page" },
   admin: { group: "محتوى الصفحات" },
-  access: { read: () => true },
+    access: {
+    read: () => true,
+    update: ({ req: { user } }) => Boolean(user),
+  },
   fields: [
     {
       name: "hero",
