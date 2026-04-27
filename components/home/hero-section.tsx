@@ -31,58 +31,48 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
   }, [slides.length])
 
   return (
-    <section className="relative overflow-hidden bg-background text-foreground min-h-[85vh] flex items-center">
-      {/* Background Media */}
-      {slides.map((slide, index) => {
-        const isVideo = slide.mediaType === "video"
-        const mediaUrl = isVideo ? slide.backgroundVideo?.url : slide.backgroundImage?.url
+    <section className="relative overflow-hidden text-foreground min-h-[85vh] flex items-center bg-transparent">
+      {/* Background Media Container */}
+      <div className="absolute inset-0 z-0">
+        {slides.map((slide, index) => {
+          const isVideo = slide.mediaType === "video"
+          const mediaUrl = isVideo ? slide.backgroundVideo?.url : slide.backgroundImage?.url
 
-        return (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-          >
-            {isVideo && mediaUrl ? (
-              <video
-                src={mediaUrl}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="object-cover w-full h-full opacity-40"
-              />
-            ) : mediaUrl ? (
-              <Image
-                src={mediaUrl}
-                alt={slide.headline}
-                fill
-                priority={index === 0}
-                className="object-cover opacity-30"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-muted/20" />
-            )}
+          if (index !== currentSlide) return null
 
-            {/* Dark/Gradient Overlays */}
+          return (
             <div
-              aria-hidden="true"
-              className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50 md:bg-gradient-to-l md:from-background md:via-background/90 md:to-background/60"
-            />
-          </div>
-        )
-      })}
+              key={index}
+              className="absolute inset-0 w-full h-full animate-in fade-in duration-1000"
+            >
+              {isVideo && mediaUrl ? (
+                <video
+                  key={mediaUrl}
+                  src={mediaUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="h-full w-full object-cover"
+                />
+              ) : mediaUrl ? (
+                <Image
+                  src={mediaUrl}
+                  alt={slide.headline}
+                  fill
+                  priority
+                  className="object-cover"
+                />
+              ) : (
+                <div className="h-full w-full bg-brand-navy" />
+              )}
+            </div>
+          )
+        })}
+      </div>
 
-      {/* Subtle grid */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
-      />
+      {/* Subtle overlay for text readability (very light) */}
+      <div className="absolute inset-0 z-1 bg-black/20 pointer-events-none" />
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start justify-center container-px py-24 md:py-32 lg:py-40 z-10">
 

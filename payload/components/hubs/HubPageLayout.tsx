@@ -19,11 +19,12 @@ export const HubCard: React.FC<HubCardProps> = ({ title, description, href, icon
                 flexDirection: "column",
                 gap: "12px",
                 padding: "24px",
-                background: "#FFFFFF",
+                backgroundColor: "#FFFFFF !important",
+                background: "#FFFFFF !important",
                 borderRadius: "16px",
                 border: "1px solid #E5E7EB",
                 textDecoration: "none",
-                color: "inherit",
+                color: "#0F172A !important",
                 transition: "all 0.2s ease",
                 boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
             }}
@@ -36,14 +37,14 @@ export const HubCard: React.FC<HubCardProps> = ({ title, description, href, icon
           border-color: #D1D5DB;
         }
       `}</style>
-            <div style={{ color: "#111827", marginBottom: "4px" }}>
+            <div style={{ color: "#111827 !important", marginBottom: "4px" }}>
                 {icon}
             </div>
             <div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "4px", color: "#111827" }}>
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "4px", color: "#0F172A !important" }}>
                     {title}
                 </h3>
-                <p style={{ fontSize: "0.85rem", color: "#6B7280", lineHeight: "1.5" }}>
+                <p style={{ fontSize: "0.85rem", color: "#475569 !important", lineHeight: "1.5" }}>
                     {description}
                 </p>
             </div>
@@ -59,12 +60,16 @@ export const HubPageLayout: React.FC<{
     return (
         <div
             style={{
-                padding: "24px 32px",
+                padding: "40px 48px",
                 fontFamily: "'Tajawal', system-ui, sans-serif",
                 width: "100%",
+                minHeight: "100vh",
+                backgroundColor: "#F8FAFC",
+                color: "#0F172A",
+                direction: "rtl",
             }}
         >
-            <header style={{ marginBottom: "56px", textAlign: "right", maxWidth: "800px" }}>
+            <header style={{ marginBottom: "56px", textAlign: "right", maxWidth: "800px", borderRight: "4px solid #3B82F6", paddingRight: "24px" }}>
                 <h1 style={{ fontSize: "2.5rem", fontWeight: 900, color: "#0F172A", marginBottom: "12px", letterSpacing: "-0.02em" }}>
                     {title}
                 </h1>

@@ -37,7 +37,7 @@ const analyticsRows = [
 
 function Card({ children, style = {} }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div style={{ background: T.white, borderRadius: "16px", border: `1px solid ${T.border}`, boxShadow: T.shadow, overflow: "hidden", ...style }}>
+    <div style={{ background: "#FFFFFF !important", backgroundColor: "#FFFFFF !important", borderRadius: "16px", border: `1px solid ${T.border}`, boxShadow: T.shadow, overflow: "hidden", ...style }}>
       {children}
     </div>
   )

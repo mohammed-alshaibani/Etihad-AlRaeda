@@ -16,9 +16,6 @@ export const Homepage: GlobalConfig = {
       relationTo: "hero-slides",
       hasMany: true,
       label: { ar: "شرائح القسم الرئيسي", en: "Hero Slides" },
-      admin: {
-        description: "اختر الشرائح وستُرتَّب تلقائياً حسب حقل 'الترتيب' في كل شريحة. إدارة الشرائح من قسم 'شرائح القسم الرئيسي'",
-      },
     },
     {
       name: "about",

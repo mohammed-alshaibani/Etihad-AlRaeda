@@ -50,7 +50,6 @@ export const HeroSlides: CollectionConfig = {
             relationTo: "media",
             label: { ar: "صورة الخلفية", en: "Background Image" },
             admin: {
-                description: "يُستخدم عند اختيار 'صورة' كنوع الوسائط",
                 condition: (data) => data?.mediaType === "image",
             },
         },
@@ -60,7 +59,6 @@ export const HeroSlides: CollectionConfig = {
             relationTo: "media",
             label: { ar: "فيديو الخلفية", en: "Background Video" },
             admin: {
-                description: "يُستخدم عند اختيار 'فيديو' — يُفضّل رفع ملف MP4",
                 condition: (data) => data?.mediaType === "video",
             },
         },
@@ -70,7 +68,6 @@ export const HeroSlides: CollectionConfig = {
             relationTo: "media",
             label: { ar: "صورة بديلة للفيديو", en: "Video Fallback Image" },
             admin: {
-                description: "تظهر في المتصفحات التي لا تدعم الفيديو، وعلى الجوال",
                 condition: (data) => data?.mediaType === "video",
             },
         },
@@ -108,7 +105,6 @@ export const HeroSlides: CollectionConfig = {
             type: "number",
             defaultValue: 0,
             label: { ar: "الترتيب", en: "Display Order" },
-            admin: { description: "الأقل يظهر أولاً" },
         },
         {
             name: "isActive",

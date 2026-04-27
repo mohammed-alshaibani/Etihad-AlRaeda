@@ -1,79 +1,94 @@
-import Image from "next/image"
 import Link from "next/link"
-import { ArrowLeft, CalendarDays } from "lucide-react"
+import { ArrowLeft, CalendarDays, CheckCircle2, FileText } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
 export function FinalCta({ data }: { data?: any }) {
   const title = data?.title || "لنصمّم معاً خارطة طريق أعمالك للعام القادم"
-  const description = data?.description || "جلسة استكشافية مجانية لمدة 45 دقيقة مع أحد كبار استشاريينا، ستحصل بنهايتها على 3 توصيات قابلة للتنفيذ فوراً."
-  const ctaLabel = data?.ctaLabel || "طلب عرض سعر"
-  const ctaUrl = data?.ctaUrl || "/request-quote"
-
+  
   return (
-    <section className="relative overflow-hidden bg-background py-20 text-foreground md:py-28">
-      <div className="absolute inset-0 opacity-20">
-        <Image
-          src="/images/team-collaboration.jpg"
-          alt=""
-          fill
-          className="object-cover"
-        />
-      </div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-l from-[var(--brand-navy-900)] via-[var(--brand-navy)] to-[var(--brand-navy)]/90"
-      />
+    <section className="relative overflow-hidden py-24 md:py-32">
+      <div className="mx-auto max-w-7xl container-px">
+        {/* Main Wrapper with Gold Background */}
+        <div className="relative overflow-hidden rounded-[3rem] bg-primary p-8 md:p-16 lg:p-20 shadow-premium-lg">
+          {/* Abstract background shapes */}
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-[400px] h-[400px] bg-black/5 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative mx-auto max-w-7xl container-px text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-primary">
-          جاهزون للخطوة التالية؟
-        </p>
-        <h2 className="mx-auto mt-4 max-w-3xl font-display text-3xl font-extrabold leading-tight text-balance text-foreground md:text-5xl">
-          {title}
-        </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-base text-foreground/75 md:text-base">
-          {description}
-        </p>
+          <div className="relative z-10 text-center mb-16">
+            <h2 className="font-display text-4xl font-black text-primary-foreground md:text-5xl lg:text-6xl leading-[1.1]">
+              {title}
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg md:text-xl font-medium text-primary-foreground/80">
+              اختر المسار الذي يناسبك اليوم وابدأ رحلة التحول مع خبراء إتحاد الريادة
+            </p>
+          </div>
 
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <Button
-            asChild
-            size="lg"
-            className="h-12 bg-primary px-7 text-base font-semibold text-foreground shadow-premium-lg hover:bg-primary/90"
-          >
-            <Link href={ctaUrl || "/request-quote"}>
-              {ctaLabel}
-              <ArrowLeft className="mr-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button
-            asChild
-            size="lg"
-            variant="outline"
-            className="h-12 border-foreground/25 bg-foreground/5 px-7 text-base font-semibold text-foreground backdrop-blur hover:bg-foreground/10 hover:text-foreground"
-          >
-            <Link href="/book-appointment">
-              <CalendarDays className="ml-2 h-4 w-4" />
-              حجز استشارة مجانية
-            </Link>
-          </Button>
+          <div className="relative z-10 grid grid-cols-1 gap-8 md:grid-cols-2">
+            {/* Card 1: Free Inspection */}
+            <div className="group flex flex-col rounded-[2rem] bg-brand-navy p-10 shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary mb-8 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-500">
+                <CalendarDays className="h-7 w-7" />
+              </div>
+              <h3 className="font-display text-2xl font-black text-white mb-6">حجز معاينة مجانية</h3>
+              <ul className="flex flex-col gap-4 mb-10">
+                {[
+                  "معاينة ميدانية خلال 24 ساعة",
+                  "بدون أي التزام مسبق",
+                  "تقرير مبدئي للحالة التشغيلية",
+                  "توصيات فورية لتحسين الكفاءة"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-brand-gray">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0" />
+                    <span className="font-medium text-base">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                asChild
+                size="lg"
+                className="mt-auto h-14 bg-primary text-primary-foreground font-black text-lg rounded-2xl hover:bg-white hover:text-brand-navy transition-all duration-300"
+              >
+                <Link href="/book-appointment">
+                  احجز موعدك الآن
+                  <ArrowLeft className="mr-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+
+            {/* Card 2: Request Quote */}
+            <div className="group flex flex-col rounded-[2rem] bg-brand-navy-900 p-10 shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/5">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 text-white mb-8 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-500">
+                <FileText className="h-7 w-7" />
+              </div>
+              <h3 className="font-display text-2xl font-black text-white mb-6">طلب عرض سعر</h3>
+              <ul className="flex flex-col gap-4 mb-10">
+                {[
+                  "عرض سعر فني ومالي مفصل",
+                  "تحليل دقيق للتكاليف الحالية",
+                  "جدول زمني محكم للتنفيذ",
+                  "خيارات دفع مرنة للمؤسسات"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-brand-gray">
+                    <CheckCircle2 className="h-5 w-5 text-white/40 shrink-0 group-hover:text-primary transition-colors" />
+                    <span className="font-medium text-base">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="mt-auto h-14 border-white/20 bg-white/5 text-white font-black text-lg rounded-2xl hover:bg-white hover:text-brand-navy transition-all duration-300"
+              >
+                <Link href="/request-quote">
+                  اطلب عرض السعر
+                  <ArrowLeft className="mr-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </div>
         </div>
-
-        <ul className="mx-auto mt-12 flex max-w-2xl flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-foreground/60">
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            بدون التزام مسبق
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            تقرير توصيات مفصّل
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-            اتفاقية سرية (NDA)
-          </li>
-        </ul>
       </div>
     </section>
   )

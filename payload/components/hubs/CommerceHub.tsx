@@ -53,6 +53,24 @@ const CommerceHub = (props: any) => {
                     href="/admin/collections/brands"
                     icon={<Ic d={P.tag} />}
                 />
+                <HubCard
+                    title="قسائم التخفيض"
+                    description="إنشاء وإدارة رموز الخصم والعروض الترويجية."
+                    href="/admin/collections/coupons"
+                    icon={<Ic d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />}
+                />
+                <HubCard
+                    title="مناطق الشحن"
+                    description="تحديد مناطق التوصيل وتكاليف الشحن لكل منطقة."
+                    href="/admin/collections/shipping-zones"
+                    icon={<Ic d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 4L9 7" />}
+                />
+                <HubCard
+                    title="بوابات الدفع"
+                    description="إعداد وتفعيل وسائل الدفع الإلكتروني المتاحة."
+                    href="/admin/globals/payment-gateways"
+                    icon={<Ic d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />}
+                />
             </HubPageLayout>
         </DefaultTemplate>
     )

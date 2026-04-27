@@ -1,144 +1,142 @@
 "use client"
 
-import { useState } from "react"
+import React, { useCallback } from "react"
 import { Quote, Star, ChevronRight, ChevronLeft } from "lucide-react"
+import useEmblaCarousel from "embla-carousel-react"
 
 import { Button } from "@/components/ui/button"
 
 const testimonials = [
   {
     quote:
-      "تعامل مَراسي كان نقلة نوعية. خلال 90 يوماً فقط، أعادوا هيكلة سلسلة التوريد لدينا ووفّروا 28% من التكاليف التشغيلية دون التأثير على جودة الخدمة.",
+      "تعامل إتحاد الريادة كان نقلة نوعية. خلال 90 يوماً فقط، أعادوا هيكلة صيانة مرافقنا ووفّروا 28% من التكاليف التشغيلية دون التأثير على جودة الخدمة.",
     author: "م. عبدالله الراشد",
-    role: "الرئيس التنفيذي للعمليات",
-    company: "مجموعة الخليج الصناعية",
+    role: "مدير العمليات",
+    company: "مجموعة الخليج اللوجستية",
     initials: "ع.ر",
     stars: 5,
   },
   {
     quote:
-      "فريق استشاري عميق في القطاع المالي. أعدّوا لنا نموذج حوكمة متكامل ساعدنا في تجاوز تقييم المطابقة التنظيمية للمرة الأولى.",
+      "فريق احترافي ومتفهم لمتطلبات السوق السعودي. أعدّوا لنا خطة تشغيلية متكاملة ساعدتنا في رفع كفاءة المباني الإدارية بنسبة 40% خلال السنة الأولى.",
     author: "أ. نورة السبيعي",
-    role: "رئيس قسم المخاطر",
-    company: "بنك الأهلية للاستثمار",
+    role: "رئيس المرافق",
+    company: "تراست العقارية",
     initials: "ن.س",
     stars: 5,
   },
   {
     quote:
-      "من أفضل قرارات الاستعانة بمصدر خارجي اتخذناها. الشفافية في التقارير، ولوحات المتابعة المباشرة، ومدير الحساب المخصّص—كل شيء يعمل بسلاسة.",
-    author: "د. فهد العتيبي",
+      "من أفضل قرارات التعاقد التي اتخذناها. الشفافية في التقارير، وسرعة الاستجابة في حالات الطوارئ، وفريق عمل مخلص—كل شيء يسير بمنتهى الاحترافية.",
+    author: "د. فهر العتيبي",
     role: "المدير العام",
-    company: "شركة نورا للتقنية",
+    company: "مستشفى الرعاية",
     initials: "ف.ع",
     stars: 5,
   },
 ]
 
 export function TestimonialsSection() {
-  const [index, setIndex] = useState(0)
-  const active = testimonials[index]
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    direction: "rtl",
+  })
 
-  const go = (dir: 1 | -1) => {
-    setIndex((prev) =>
-      (prev + dir + testimonials.length) % testimonials.length
-    )
-  }
+  const [selectedIndex, setSelectedIndex] = React.useState(0)
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi])
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi])
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return
+    setSelectedIndex(emblaApi.selectedScrollSnap())
+  }, [emblaApi])
+
+  React.useEffect(() => {
+    if (!emblaApi) return
+    onSelect()
+    emblaApi.on("select", onSelect)
+  }, [emblaApi, onSelect])
 
   return (
-    <section
-      id="testimonials"
-      className="relative overflow-hidden bg-background py-20 md:py-28"
-    >
+    <section id="testimonials" className="relative overflow-hidden bg-background py-24 md:py-32">
       <div className="mx-auto max-w-7xl container-px">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
-          <div className="lg:col-span-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
+          <div className="lg:col-span-5 flex flex-col justify-center">
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-primary">
               آراء العملاء
             </p>
-            <h2 className="mt-2 font-display text-3xl font-bold leading-tight text-balance text-foreground md:text-4xl">
-              ما يقوله شركاؤنا عن تعاملهم مع مَراسي
+            <h2 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl">
+              ثقة نعتز بها من شركاء النجاح
             </h2>
-            <p className="mt-4 text-base text-muted-foreground md:text-base">
-              شهادات حقيقية من أكثر من 350 عميلاً مؤسسياً في 14 قطاعاً. نقيس
-              نجاحنا بنتائج أعمالك.
+            <p className="mt-6 text-lg text-muted-foreground leading-relaxed">
+              نفخر بخدمة أكثر من 350 عميلاً في مختلف القطاعات. نجاحنا يُقاس برضاكم واستدامة مرافقكم.
             </p>
 
-            <div className="mt-8 flex items-center gap-3">
+            <div className="mt-10 flex items-center gap-4">
               <Button
-                onClick={() => go(1)}
+                onClick={scrollNext}
                 variant="outline"
                 size="icon"
-                className="border-[var(--brand-navy)]/15 text-foreground"
-                aria-label="السابق"
+                className="h-12 w-12 rounded-full border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-6 w-6" />
               </Button>
               <Button
-                onClick={() => go(-1)}
+                onClick={scrollPrev}
                 variant="outline"
                 size="icon"
-                className="border-[var(--brand-navy)]/15 text-foreground"
-                aria-label="التالي"
+                className="h-12 w-12 rounded-full border-border bg-background text-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-6 w-6" />
               </Button>
-              <span className="ms-3 font-display text-sm font-semibold text-muted-foreground">
-                0{index + 1}
-                <span className="mx-1 text-foreground">/</span>
-                0{testimonials.length}
-              </span>
+              <div className="ms-4 flex items-center gap-2">
+                <span className="text-2xl font-black text-primary">0{selectedIndex + 1}</span>
+                <span className="h-px w-8 bg-border" />
+                <span className="text-sm font-bold text-muted-foreground">0{testimonials.length}</span>
+              </div>
             </div>
           </div>
 
           <div className="relative lg:col-span-7">
-            <div className="relative rounded-2xl border border-border bg-muted p-8 md:p-12">
-              <Quote
-                aria-hidden="true"
-                className="absolute -top-5 right-8 h-14 w-14 text-primary"
-                fill="currentColor"
-              />
-              <div className="flex items-center gap-1">
-                {Array.from({ length: active.stars }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 text-primary"
-                    fill="currentColor"
-                  />
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex">
+                {testimonials.map((item, i) => (
+                  <div key={i} className="flex-[0_0_100%] min-w-0 pl-4">
+                    <div className="relative rounded-3xl border border-border bg-card/50 p-10 md:p-14 backdrop-blur-md shadow-premium transition-all duration-500">
+                      <Quote
+                        aria-hidden="true"
+                        className="absolute -top-6 left-12 h-16 w-16 text-primary/10 fill-primary/10"
+                      />
+                      <div className="flex items-center gap-1.5 mb-8">
+                        {Array.from({ length: item.stars }).map((_, si) => (
+                          <Star key={si} className="h-5 w-5 text-primary fill-primary" />
+                        ))}
+                      </div>
+                      <p className="font-display text-2xl font-bold leading-relaxed text-foreground md:text-3xl md:leading-[1.4]">
+                        "{item.quote}"
+                      </p>
+                      <div className="mt-12 flex items-center gap-5 border-t border-border/50 pt-10">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-display text-lg font-black shadow-lg">
+                          {item.initials}
+                        </div>
+                        <div>
+                          <p className="font-display text-xl font-black text-foreground">
+                            {item.author}
+                          </p>
+                          <p className="text-base font-medium text-primary">
+                            {item.role} — {item.company}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 ))}
               </div>
-              <p className="mt-5 font-display text-xl font-semibold leading-relaxed text-foreground text-balance md:text-2xl md:leading-[1.5]">
-                {active.quote}
-              </p>
-              <div className="mt-8 flex items-center gap-4 border-t border-border pt-6">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-background font-display text-sm font-bold text-foreground">
-                  {active.initials}
-                </span>
-                <div>
-                  <p className="font-display text-base font-bold text-foreground">
-                    {active.author}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {active.role} — {active.company}
-                  </p>
-                </div>
-              </div>
             </div>
-
-            <div className="mt-4 flex justify-end gap-1.5">
-              {testimonials.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setIndex(i)}
-                  aria-label={`الشهادة رقم ${i + 1}`}
-                  className={`h-1.5 rounded-full transition-all ${
-                    i === index
-                      ? "w-8 bg-primary"
-                      : "w-2 bg-[var(--brand-gray)]/60"
-                  }`}
-                />
-              ))}
-            </div>
+            
+            {/* Background Accent */}
+            <div className="absolute -z-10 -bottom-6 -left-6 h-full w-full rounded-3xl border border-primary/10 bg-primary/5" />
           </div>
         </div>
       </div>

@@ -50,36 +50,40 @@ export function ProcessSection({ data }: { data?: any }) {
           </p>
         </div>
 
-        <ol className="mt-14 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 flex flex-col gap-8 lg:flex-row lg:overflow-x-auto lg:pb-12 lg:snap-x lg:scrollbar-hide">
           {stepsData.map((step: any, idx: number) => {
             const Icon = iconMap[idx % iconMap.length]
             return (
-              <li key={step.title || idx} className="relative">
-                {/* Connector line */}
-                {idx < stepsData.length - 1 && (
-                  <div
-                    aria-hidden="true"
-                    className="absolute right-6 top-6 hidden h-px w-[calc(100%-1.5rem)] -translate-y-px bg-gradient-to-l from-transparent via-white/20 to-transparent lg:block"
-                  />
-                )}
-                <div className="flex items-center gap-4">
-                  <span className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-primary/30 bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <span className="font-display text-4xl font-extrabold text-foreground/10">
-                    {step.number || `0${idx + 1}`}
-                  </span>
+              <div key={step.title || idx} className="w-full shrink-0 lg:w-[320px] lg:snap-center">
+                <div className="group relative h-full rounded-2xl border border-border bg-card/50 p-8 transition-all duration-500 hover:border-primary/50 backdrop-blur-sm">
+                  {/* Connector line (desktop only) */}
+                  {idx < stepsData.length - 1 && (
+                    <div
+                      aria-hidden="true"
+                      className="absolute left-0 top-12 hidden h-px w-full bg-gradient-to-r from-primary/30 to-transparent lg:block translate-x-1/2 z-0"
+                    />
+                  )}
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors duration-500 group-hover:bg-primary group-hover:text-primary-foreground">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className="font-display text-3xl font-extrabold text-foreground/10 transition-colors duration-500 group-hover:text-primary/20">
+                        {step.number || `0${idx + 1}`}
+                      </span>
+                    </div>
+                    <h3 className="mt-8 font-display text-xl font-bold text-foreground">
+                      {step.title}
+                    </h3>
+                    <p className="mt-4 text-sm font-normal leading-relaxed text-muted-foreground">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="mt-6 font-display text-xl font-bold text-foreground">
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-base font-normal leading-relaxed text-foreground/70">
-                  {step.description}
-                </p>
-              </li>
+              </div>
             )
           })}
-        </ol>
+        </div>
       </div>
     </section>
   )

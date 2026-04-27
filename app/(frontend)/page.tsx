@@ -20,7 +20,7 @@ export default async function HomePage() {
   try {
     homepage = await payload.findGlobal({
       slug: "homepage",
-      depth: 2,
+      depth: 3,
     })
   } catch (error) {
     console.error("Error fetching homepage global:", error)
@@ -71,8 +71,8 @@ export default async function HomePage() {
     <>
       <HeroSection heroSlides={homepage?.heroSlides || []} />
       <PartnersStrip data={brands} />
-      <ServicesSection data={homepage?.servicesSection || {}} services={services} />
       <AboutSection data={homepage?.about || {}} />
+      <ServicesSection data={homepage?.servicesSection || {}} services={services} />
       <PortfolioSection data={homepage?.portfolioSection || {}} />
       <ProcessSection data={homepage?.processSection || {}} />
       <TestimonialsSection />

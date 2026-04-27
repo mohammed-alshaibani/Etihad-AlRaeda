@@ -218,3 +218,93 @@ body,
   max-width: 1000px;
   margin: 0 auto;
 }
+
+/* ── Force Light Theme Overrides ──────────────────────────────── */
+:root, [data-theme="dark"], [data-theme="light"] {
+  --theme-bg: #F8FAFC !important;
+  --theme-elevation-0: #FFFFFF !important;
+  --theme-elevation-50: #F8FAFC !important;
+  --theme-elevation-100: #FFFFFF !important;
+  --theme-elevation-150: #F1F5F9 !important;
+  --theme-elevation-200: #E2E8F0 !important;
+  --theme-text: #0F172A !important;
+}
+
+.payload-admin .card,
+.payload-admin [class*="card"],
+.payload-admin .dashboard__card,
+.payload-admin .hub-card,
+.payload-admin .template-default__wrap {
+  background-color: #F8FAFC !important;
+}
+
+/* ── Hide Media Library Selection & Editing ─────────────────── */
+/* Target all possible "Choose from List / Use Existing" buttons and triggers (English & Arabic) */
+.payload-admin .upload__list-selector,
+.payload-admin .upload__use-existing,
+.payload-admin .list-drawer__trigger,
+.payload-admin button[aria-label*="Choose"],
+.payload-admin button[aria-label*="Select"],
+.payload-admin button[aria-label*="Existing"],
+.payload-admin button[aria-label*="Library"],
+.payload-admin button[aria-label*="اختر"],
+.payload-admin button[aria-label*="قائمة"],
+.payload-admin button[class*="list-selector"],
+.payload-admin button[class*="use-existing"],
+.payload-admin .upload__list-drawer-trigger {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Hide field descriptions globally to keep forms clean */
+.payload-admin .field-description,
+.payload-admin [class*="description"] {
+  display: none !important;
+}
+
+/* Hides "Edit" and "Details" buttons after a file is uploaded */
+.payload-admin .upload__edit,
+.payload-admin .upload__details,
+.payload-admin a[class*="upload__edit"],
+.payload-admin button[class*="upload__edit"],
+.payload-admin .doc-drawer__trigger {
+  display: none !important;
+}
+
+/* Centering the "Upload New" and "Drag & Drop" area */
+.payload-admin .upload__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  border: 2px dashed #E2E8F0;
+  border-radius: 12px;
+  background: #FFFFFF;
+}
+
+/* Make "Create New" button prominent */
+.payload-admin .upload__wrap button.upload__file-picker {
+  background: #0F172A !important;
+  color: #FFFFFF !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+}
+
+.payload-admin .card,
+.payload-admin [class*="card"],
+.payload-admin .dashboard__card,
+.payload-admin .hub-card,
+.payload-admin .data-card-grid > div {
+  background-color: #FFFFFF !important;
+  background: #FFFFFF !important;
+  color: #0F172A !important;
+}

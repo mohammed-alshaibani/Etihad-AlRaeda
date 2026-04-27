@@ -3,13 +3,13 @@ import type { CollectionConfig } from "payload"
 export const Media: CollectionConfig = {
   slug: "media",
   admin: {
-    group: "الإدارة",
+    hidden: true, // Hide from sidebar
   },
   labels: {
     singular: { ar: "وسائط", en: "Media" },
     plural: { ar: "مكتبة الوسائط", en: "Media Library" },
   },
-    access: {
+  access: {
     read: () => true,
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
@@ -24,19 +24,5 @@ export const Media: CollectionConfig = {
       { name: "hero", width: 1920, height: 1080, position: "centre" },
     ],
   },
-  fields: [
-    {
-      name: "alt",
-      type: "text",
-      label: { ar: "النص البديل", en: "Alt Text" },
-      required: false,
-      localized: true,
-    },
-    {
-      name: "caption",
-      type: "text",
-      label: { ar: "التسمية التوضيحية", en: "Caption" },
-      localized: true,
-    },
-  ],
+  fields: [], // No extra fields (alt, name, etc.)
 }
