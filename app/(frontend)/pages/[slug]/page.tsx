@@ -8,30 +8,35 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-    const resolvedParams = await params
-    const payload = await getPayload({ config })
+    try {
+        const resolvedParams = await params
+        const payload = await getPayload({ config })
 
-    const { docs } = await payload.find({
-        collection: "dynamic-pages",
-        where: {
-            slug: { equals: resolvedParams.slug },
-            status: { equals: "published" },
-        },
-        limit: 1,
-    })
+        const { docs } = await payload.find({
+            collection: "dynamic-pages",
+            where: {
+                slug: { equals: resolvedParams.slug },
+                status: { equals: "published" },
+            },
+            limit: 1,
+        })
 
-    if (!docs.length) return { title: "Page Not Found | Etihad AlRaeda" }
+        if (!docs.length) return { title: "Page Not Found | Etihad AlRaeda" }
 
-    const page = docs[0]
+        const page = docs[0]
 
-    return {
-        title: page.seo?.metaTitle || `${page.title} | Etihad AlRaeda`,
-        description: page.seo?.metaDescription || "",
-        openGraph: {
-            title: page.seo?.metaTitle || page.title,
+        return {
+            title: page.seo?.metaTitle || `${page.title} | Etihad AlRaeda`,
             description: page.seo?.metaDescription || "",
-            images: page.seo?.ogImage ? [page.seo.ogImage] : [],
-        },
+            openGraph: {
+                title: page.seo?.metaTitle || page.title,
+                description: page.seo?.metaDescription || "",
+                images: page.seo?.ogImage ? [page.seo.ogImage] : [],
+            },
+        }
+    } catch (error) {
+        console.error("Error in generateMetadata (dynamic-pages):", error)
+        return { title: "Etihad AlRaeda" }
     }
 }
 
@@ -55,20 +60,24 @@ export async function generateStaticParams() {
 
 export default async function DynamicPageTemplate({ params }: PageProps) {
     const resolvedParams = await params
-    const payload = await getPayload({ config })
+    let page: any = null
 
-    const { docs } = await payload.find({
-        collection: "dynamic-pages",
-        where: {
-            slug: { equals: resolvedParams.slug },
-            status: { equals: "published" },
-        },
-        limit: 1,
-    })
+    try {
+        const payload = await getPayload({ config })
+        const { docs } = await payload.find({
+            collection: "dynamic-pages",
+            where: {
+                slug: { equals: resolvedParams.slug },
+                status: { equals: "published" },
+            },
+            limit: 1,
+        })
+        page = docs[0]
+    } catch (error) {
+        console.error("Error fetching dynamic page:", error)
+    }
 
-    if (!docs.length) notFound()
-
-    const page = docs[0]
+    if (!page) notFound()
 
     return (
         <article className="min-h-screen bg-background pb-20 pt-32">

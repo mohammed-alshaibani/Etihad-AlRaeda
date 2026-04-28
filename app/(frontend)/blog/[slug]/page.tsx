@@ -11,30 +11,35 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const resolvedParams = await params
-  const payload = await getPayload({ config })
+  try {
+    const resolvedParams = await params
+    const payload = await getPayload({ config })
 
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: {
-      slug: { equals: resolvedParams.slug },
-      status: { equals: "published" },
-    },
-    limit: 1,
-  })
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: {
+        slug: { equals: resolvedParams.slug },
+        status: { equals: "published" },
+      },
+      limit: 1,
+    })
 
-  if (!docs.length) return { title: "Post Not Found | Etihad AlRaeda" }
+    if (!docs.length) return { title: "Post Not Found | Etihad AlRaeda" }
 
-  const post = docs[0]
+    const post = docs[0]
 
-  return {
-    title: post.seo?.metaTitle || `${post.title} | Etihad AlRaeda Insights`,
-    description: post.seo?.metaDescription || post.excerpt || "",
-    openGraph: {
-      title: post.seo?.metaTitle || post.title,
+    return {
+      title: post.seo?.metaTitle || `${post.title} | Etihad AlRaeda Insights`,
       description: post.seo?.metaDescription || post.excerpt || "",
-      images: post.seo?.ogImage ? [post.seo.ogImage] : [],
-    },
+      openGraph: {
+        title: post.seo?.metaTitle || post.title,
+        description: post.seo?.metaDescription || post.excerpt || "",
+        images: post.seo?.ogImage ? [post.seo.ogImage] : [],
+      },
+    }
+  } catch (error) {
+    console.error("Error in generateMetadata (blog):", error)
+    return { title: "Blog | Etihad AlRaeda" }
   }
 }
 
@@ -58,21 +63,25 @@ export async function generateStaticParams() {
 
 export default async function BlogPostPage({ params }: PageProps) {
   const resolvedParams = await params
-  const payload = await getPayload({ config })
+  let post: any = null
 
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: {
-      slug: { equals: resolvedParams.slug },
-      status: { equals: "published" },
-    },
-    depth: 2,
-    limit: 1,
-  })
+  try {
+    const payload = await getPayload({ config })
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: {
+        slug: { equals: resolvedParams.slug },
+        status: { equals: "published" },
+      },
+      depth: 2,
+      limit: 1,
+    })
+    post = docs[0]
+  } catch (error) {
+    console.error("Error fetching blog post:", error)
+  }
 
-  if (!docs.length) notFound()
-
-  const post = docs[0]
+  if (!post) notFound()
 
   // Type narrow the relation fields explicitly if they are fully populated documents
   const authorName = post.author && typeof post.author === "object" ? post.author.name : null

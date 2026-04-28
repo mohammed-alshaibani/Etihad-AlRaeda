@@ -43,6 +43,29 @@ const iconMap: Record<string, any> = {
   Zap,
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  try {
+    const { slug } = await params
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: "products",
+      where: { slug: { equals: slug } },
+      limit: 1,
+    })
+
+    const service = result.docs[0]
+    if (!service) return { title: "Service Not Found | Etihad AlRaeda" }
+
+    return {
+      title: `${service.name} | Etihad AlRaeda Services`,
+      description: service.description || "",
+    }
+  } catch (error) {
+    console.error("Error in generateMetadata (services):", error)
+    return { title: "Services | Etihad AlRaeda" }
+  }
+}
+
 export async function generateStaticParams() {
   try {
     const payload = await getPayloadClient()
@@ -69,19 +92,23 @@ export default async function ServiceDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const payload = await getPayloadClient()
+  let service: any = null
 
-  const result = await payload.find({
-    collection: "products",
-    where: {
-      slug: {
-        equals: slug,
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: "products",
+      where: {
+        slug: {
+          equals: slug,
+        },
       },
-    },
-    limit: 1,
-  })
-
-  const service = result.docs[0]
+      limit: 1,
+    })
+    service = result.docs[0]
+  } catch (error) {
+    console.error("Error fetching service detail:", error)
+  }
 
   if (!service) notFound()
 
