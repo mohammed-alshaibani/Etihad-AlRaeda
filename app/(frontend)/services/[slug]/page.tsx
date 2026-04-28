@@ -44,18 +44,23 @@ const iconMap: Record<string, any> = {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayloadClient()
-  const services = await payload.find({
-    collection: "products",
-    limit: 100,
-    select: {
-      slug: true,
-    },
-  })
+  try {
+    const payload = await getPayloadClient()
+    const services = await payload.find({
+      collection: "products",
+      limit: 100,
+      select: {
+        slug: true,
+      },
+    })
 
-  return services.docs.map((doc) => ({
-    slug: doc.slug,
-  }))
+    return services.docs.map((doc) => ({
+      slug: doc.slug,
+    }))
+  } catch (error) {
+    console.error("Error in generateStaticParams (services):", error)
+    return []
+  }
 }
 
 export default async function ServiceDetailPage({

@@ -39,16 +39,21 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export async function generateStaticParams() {
-  const payload = await getPayload({ config })
-  const { docs } = await payload.find({
-    collection: "posts",
-    where: { status: { equals: "published" } },
-    limit: 100,
-  })
+  try {
+    const payload = await getPayload({ config })
+    const { docs } = await payload.find({
+      collection: "posts",
+      where: { status: { equals: "published" } },
+      limit: 100,
+    })
 
-  return docs.map((doc) => ({
-    slug: doc.slug,
-  }))
+    return docs.map((doc) => ({
+      slug: doc.slug,
+    }))
+  } catch (error) {
+    console.error("Error in generateStaticParams (blog):", error)
+    return []
+  }
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
