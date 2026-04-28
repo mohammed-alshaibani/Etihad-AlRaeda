@@ -7,8 +7,11 @@ if (typeof globalThis.caches !== 'undefined' && globalThis.caches !== null) {
     }
 }
 
+// Skip Payload's internal Next.js environment loading to avoid CJS/ESM conflicts
+process.env.PAYLOAD_SKIP_LOAD_ENV = 'true'
+
 import { getPayload } from 'payload'
-// tsx handles the resolution of .ts files even with .js extension or no extension
+// Use the .ts configuration directly
 import config from '../payload.config.ts'
 
 async function sync() {
