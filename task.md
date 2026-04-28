@@ -69,7 +69,7 @@
 - [x] **4.2** Build `QuoteCartContext` (parallel to cart, for "Add to Quote" items)
 - [x] **4.3** Build `/shop` product listing page: (ISR grid + CSR filters: category, brand, price, stock)
 - [x] **4.4** Build `/shop/[slug]` product detail page: (gallery, variant selector, Add to Cart / Quote)
-- [ ] **4.5** Build `CartDrawer` slide-over component
+- [x] **4.5** Build `CartDrawer` slide-over component (Logic fixed & integrated into header)
 - [ ] **4.6** Build `/checkout` multi-step (Cart → Shipping → Payment, guest checkout)
 - [ ] **4.7** Integrate Dynamic(any payment gateway) (Admin can enter api keys from admin panel of each payment gateway) payment gateway:
   - [ ] `POST /api/checkout` — create payment intent

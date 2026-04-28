@@ -4,7 +4,7 @@ import Link from "next/link"
 import { ShoppingCart, X, Plus, Minus, Trash2, ArrowLeft, ShoppingBag } from "lucide-react"
 import * as Sheet from "@radix-ui/react-dialog"
 
-import { useCart } from "@/hooks/use-cart"
+import { useCart, useCartTotals } from "@/hooks/use-cart"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -13,7 +13,8 @@ function formatPrice(amount: number, currency = "SAR") {
 }
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, openCart, removeItem, updateQty, subtotal, vat, total, itemCount } = useCart()
+  const { items, isOpen, closeCart, openCart, removeItem, updateQty } = useCart()
+  const { subtotal, vat, total, itemCount } = useCartTotals()
 
   return (
     <>
@@ -97,8 +98,8 @@ export function CartDrawer() {
                                 {item.billingCycle === "monthly"
                                   ? "/ شهر"
                                   : item.billingCycle === "yearly"
-                                  ? "/ سنة"
-                                  : "مرة واحدة"}
+                                    ? "/ سنة"
+                                    : "مرة واحدة"}
                               </p>
                             </div>
                             <button

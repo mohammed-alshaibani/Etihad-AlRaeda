@@ -24,8 +24,7 @@ import {
 import { BrandLogo } from "@/components/brand-logo"
 import { mainNav } from "@/lib/navigation"
 import { SearchOverlay } from "@/components/search-overlay"
-
-
+import { CartDrawer } from "@/components/shop/cart-drawer"
 
 export function SiteHeader({ navigation }: { navigation?: any }) {
   const pathname = usePathname()
@@ -162,9 +161,11 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
           <div className="flex items-center gap-3">
             <SearchOverlay />
 
+            <CartDrawer />
+
             <Button
               asChild
-              className="bg-primary text-primary-foreground shadow-premium hover:bg-primary/90 md:inline-flex"
+              className="bg-primary text-primary-foreground shadow-premium hover:bg-primary/90 md:inline-flex hidden"
             >
               <Link href="/shop">
                 متجرنا
