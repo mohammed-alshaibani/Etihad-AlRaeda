@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "sync-db": "tsx scripts/sync-db.cjs",
+    "sync-db": "npx payload migrate:push --force",
     "build": "npm run sync-db && next build",
     "start": "next start",
     "lint": "eslint ."
@@ -85,6 +85,6 @@
     "typescript": "5.7.3"
   },
   "engines": {
-    "node": "20.x"
+    "node": "22.x"
   }
 }
