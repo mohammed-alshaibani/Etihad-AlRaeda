@@ -2,6 +2,7 @@ import { buildConfig } from "payload"
 import { postgresAdapter } from "@payloadcms/db-postgres"
 import { sqliteAdapter } from "@payloadcms/db-sqlite"
 import { lexicalEditor } from "@payloadcms/richtext-lexical"
+import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob"
 import path from "path"
 import { fileURLToPath } from "url"
 import sharp from "sharp"
@@ -50,22 +51,23 @@ import { PaymentGateways } from "./payload/globals/PaymentGateways"
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Uses PostgreSQL (Supabase) in production, SQLite for local development or during Vercel build.
-const isVercelBuild = process.env.VERCEL === "1" &&
-  (process.env.NEXT_PHASE === "phase-production-build" || process.env.CI === "1")
+// Prioritize PostgreSQL (e.g. Prisma Postgres on Vercel) if URL is available.
+// Fallback to SQLite for local development or if no DB URL is provided.
+const databaseUrl = process.env.DATABASE_URL || "file:./payload.db"
+const isPostgres = databaseUrl.startsWith("postgres") || databaseUrl.startsWith("postgresql")
 
-const dbAdapter = (isVercelBuild || !process.env.DATABASE_URL)
-  ? sqliteAdapter({
-    client: {
-      url: "file:./payload-build.db",
-    },
-    push: true, // Create tables in the ephemeral build DB so queries don't crash
-  })
-  : postgresAdapter({
+const dbAdapter = isPostgres
+  ? postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL as string,
+      connectionString: databaseUrl,
     },
-    push: true, // Automatically create tables in the production DB on first run
+    push: true, // Sync schema automatically
+  })
+  : sqliteAdapter({
+    client: {
+      url: databaseUrl,
+    },
+    push: true,
   })
 
 export default buildConfig({
@@ -168,6 +170,15 @@ export default buildConfig({
   },
   db: dbAdapter,
   sharp,
+  plugins: [
+    vercelBlobStorage({
+      enabled: !!process.env.BLOB_READ_WRITE_TOKEN,
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
+  ],
   telemetry: false,
 })
 
