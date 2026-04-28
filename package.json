@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "npx tsx sync-db.ts",
+    "prebuild": "payload migrate:push",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
