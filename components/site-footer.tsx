@@ -35,7 +35,7 @@ export function SiteFooter({ navigation, settings }: { navigation?: any, setting
               variant="outline"
               className="border-foreground/20 bg-transparent text-foreground hover:bg-foreground/10 hover:text-foreground"
             >
-              <Link href="/book-appointment">حجز موعد استشارة</Link>
+              <Link href="/book-appointment?src=footer">حجز موعد استشارة</Link>
             </Button>
           </div>
         </div>

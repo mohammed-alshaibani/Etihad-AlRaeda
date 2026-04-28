@@ -46,7 +46,7 @@ const iconMap: Record<string, any> = {
 export async function generateStaticParams() {
   const payload = await getPayloadClient()
   const services = await payload.find({
-    collection: "services",
+    collection: "products",
     limit: 100,
     select: {
       slug: true,
@@ -67,7 +67,7 @@ export default async function ServiceDetailPage({
   const payload = await getPayloadClient()
 
   const result = await payload.find({
-    collection: "services",
+    collection: "products",
     where: {
       slug: {
         equals: slug,
@@ -80,23 +80,27 @@ export default async function ServiceDetailPage({
 
   if (!service) notFound()
 
-  const Icon = iconMap[service.icon as string] || Briefcase
+  // Dynamic icon based on category (1: FM, 2: Tech, 3: Security)
+  const categoryId = typeof service.category === 'object' ? service.category.id : service.category
+  let Icon = Building2
+  if (categoryId === 2) Icon = Zap
+  if (categoryId === 3) Icon = Shield
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa]">
+    <div className="min-h-screen bg-background text-foreground">
       <PageHero
-        eyebrow="الخدمات"
-        title={service.title}
-        description={service.shortDescription || ""}
+        eyebrow="خدماتنا"
+        title={service.name}
+        description={service.description || "منظومة حلول متكاملة لكل مرحلة في رحلة أعمالك"}
         breadcrumbs={[
           { label: "الرئيسية", href: "/" },
-          { label: "خدماتنا", href: "/services" },
-          { label: service.title },
+          { label: "خدماتنا", href: "/#services" },
+          { label: service.name },
         ]}
         actions={
           <Button
             asChild
-            className="bg-[#b9995a] text-white hover:bg-[#a88648] transition-all duration-300 shadow-lg shadow-gold/20"
+            className="bg-primary text-white hover:bg-primary/90 transition-all duration-300 shadow-premium"
           >
             <Link href="/request-quote">
               طلب عرض سعر
@@ -107,126 +111,53 @@ export default async function ServiceDetailPage({
       />
 
       {/* Main Content Area */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 lg:px-8">
+      <section className="py-20 md:py-32 bg-background relative overflow-hidden">
+        {/* Subtle Background pattern */}
+        <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, var(--primary) 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20">
-            
-            {/* Sidebar (Appears on left in RTL) */}
-            <aside className="lg:col-span-4 order-2 lg:order-1">
-              <div className="sticky top-28 space-y-8">
-                
-                {/* Quick Contact Card */}
-                <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-xl shadow-gray-100/50">
-                  <div className="mb-6">
-                    <span className="text-[11px] font-bold uppercase tracking-widest text-[#b9995a]">تواصل مباشر</span>
-                    <h3 className="mt-2 font-display text-2xl font-bold text-[#172946]">طلب استشارة سريعة</h3>
-                  </div>
 
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="s-name" className="text-[#172946]/70">الاسم بالكامل</Label>
-                      <Input id="s-name" placeholder="محمد أحمد" className="border-gray-200 focus:border-[#b9995a] focus:ring-[#b9995a]" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="s-email" className="text-[#172946]/70">البريد الإلكتروني</Label>
-                      <Input id="s-email" type="email" placeholder="name@company.com" dir="ltr" className="border-gray-200 focus:border-[#b9995a] focus:ring-[#b9995a]" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="s-company" className="text-[#172946]/70">الشركة / الجهة</Label>
-                      <Input id="s-company" placeholder="اسم الشركة" className="border-gray-200 focus:border-[#b9995a] focus:ring-[#b9995a]" />
-                    </div>
-                    <Button className="w-full h-12 bg-[#172946] text-white hover:bg-[#1e3458] transition-colors">
-                      إرسال الطلب
-                    </Button>
-                  </form>
-                </div>
-
-                {/* Service Specs Card */}
-                <div className="rounded-2xl bg-[#172946] p-8 text-white">
-                  <h4 className="font-display text-xl font-bold text-[#b9995a] mb-6">تفاصيل الخدمة</h4>
-                  <ul className="space-y-5">
-                    <li className="flex justify-between items-center border-b border-white/10 pb-4">
-                      <span className="text-gray-400 text-sm">السعر التقديري</span>
-                      <span className="font-bold">{service.startingPrice || "حسب المتطلبات"}</span>
-                    </li>
-                    <li className="flex justify-between items-center border-b border-white/10 pb-4">
-                      <span className="text-gray-400 text-sm">المدة المتوقعة</span>
-                      <span className="font-bold">{service.duration || "مرنة"}</span>
-                    </li>
-                    <li className="flex justify-between items-center">
-                      <span className="text-gray-400 text-sm">نوع التعاقد</span>
-                      <span className="font-bold">مؤسسي / سنوي</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </aside>
-
-            {/* Content Area (Appears on right in RTL) */}
-            <div className="lg:col-span-8 order-1 lg:order-2">
-              <div className="flex items-center gap-4 mb-8">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#b9995a]/10 text-[#b9995a]">
-                  <Icon className="h-7 w-7" />
+            {/* Content Area - Full Width since sidebar is removed */}
+            <div className="lg:col-span-12">
+              <div className="flex flex-col md:flex-row md:items-center gap-6 mb-12">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary shadow-premium-lg">
+                  <Icon className="h-8 w-8" />
                 </div>
                 <div>
-                  <span className="text-[12px] font-bold uppercase tracking-widest text-[#b9995a]">نظرة عامة على الخدمة</span>
-                  <h2 className="text-3xl md:text-4xl font-display font-bold text-[#172946] mt-1">تطوير الأعمال بذكاء</h2>
+                  <span className="text-[12px] font-bold uppercase tracking-[0.2em] text-primary">تفاصيل الخدمة</span>
+                  <h2 className="text-3xl md:text-5xl font-display font-bold text-white mt-1 leading-tight">{service.name}</h2>
                 </div>
               </div>
 
               {/* Rich Text Description */}
-              <div className="prose prose-lg prose-slate max-w-none mb-16 text-[#172946]/80 leading-relaxed">
-                {/* Fallback description if rich text is complex, we can use a renderer here */}
-                {typeof service.description === 'string' ? service.description : "نقدّم حلولاً متكاملة تضمن لشركتكم التميّز والريادة في السوق المحلي، عبر منهجيات علمية وخبرات واقعية."}
+              {service.description && (
+                <div className="prose prose-lg prose-invert max-w-none mb-20 text-foreground/80 leading-relaxed font-normal">
+                  {service.description}
+                </div>
+              )}
+
+              {/* Official Sub-Services (Tags) */}
+              <div className="mb-20">
+                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-10 relative inline-block">
+                  الخدمات والحلول المتاحة
+                  <span className="absolute -bottom-3 right-0 w-16 h-1 rounded-full bg-primary"></span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                  {(service.tags || []).map((t: any, idx: number) => (
+                    <div key={idx} className="group p-8 rounded-3xl border border-border/50 bg-card/20 hover:border-primary/30 transition-all duration-500 hover:bg-card/40 backdrop-blur-sm">
+                      <div className="flex items-center gap-5">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                          <Check className="h-5 w-5" strokeWidth={3} />
+                        </div>
+                        <h4 className="font-bold text-white text-lg group-hover:text-primary transition-colors">
+                          {typeof t === 'string' ? t : (t.tag || "")}
+                        </h4>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-
-              {/* Benefits Grid */}
-              {service.benefits && service.benefits.length > 0 && (
-                <div className="mb-16">
-                  <h3 className="text-2xl font-display font-bold text-[#172946] mb-8 relative inline-block">
-                    الفوائد الاستراتيجية
-                    <span className="absolute -bottom-2 right-0 w-12 h-1 bg-[#b9995a]"></span>
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {service.benefits.map((benefit: any, idx: number) => (
-                      <div key={idx} className="group p-6 rounded-2xl border border-gray-100 bg-white hover:border-[#b9995a]/30 transition-all duration-300">
-                        <div className="flex items-start gap-4">
-                          <div className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#b9995a]/20 text-[#b9995a]">
-                            <Check className="h-3.5 w-3.5" strokeWidth={3} />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-[#172946] mb-2">{benefit.title}</h4>
-                            <p className="text-sm text-gray-500 leading-relaxed">{benefit.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Deliverables / Process */}
-              {service.process && service.process.length > 0 && (
-                <div className="rounded-3xl bg-gray-50 p-8 md:p-12 border border-gray-100">
-                  <h3 className="text-2xl font-display font-bold text-[#172946] mb-10">منهجية العمل والخطوات</h3>
-                  <div className="space-y-8">
-                    {service.process.map((step: any, idx: number) => (
-                      <div key={idx} className="flex gap-6 relative">
-                        {idx !== service.process.length - 1 && (
-                          <div className="absolute top-10 right-[15px] w-[2px] h-full bg-gray-200"></div>
-                        )}
-                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#172946] text-[#b9995a] font-display font-bold text-sm z-10">
-                          {idx + 1}
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-[#172946] text-lg mb-2">{step.title}</h4>
-                          <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
             </div>
           </div>
@@ -234,17 +165,17 @@ export default async function ServiceDetailPage({
       </section>
 
       {/* Final CTA */}
-      <section className="bg-[#172946] py-20 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#b9995a]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+      <section className="bg-brand-navy-900 py-24 md:py-32 relative overflow-hidden border-t border-border/50">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h2 className="text-3xl md:text-5xl font-display font-bold text-white mb-6">هل أنت جاهز لبدء التحوّل؟</h2>
-          <p className="text-gray-400 max-w-2xl mx-auto mb-10 text-lg">نحن هنا لمساعدتكم في تحقيق أهدافكم المؤسسية عبر حلول مبتكرة ومخصصة.</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#b9995a] text-white hover:bg-[#a88648] px-10 h-14 text-lg">
-              ابدأ الآن
+          <h2 className="text-3xl md:text-6xl font-display font-bold text-white mb-8 tracking-tight">هل أنت جاهز لبدء التحوّل؟</h2>
+          <p className="text-foreground/60 max-w-2xl mx-auto mb-12 text-lg md:text-xl font-normal leading-relaxed">نحن هنا لمساعدتكم في تحقيق أهدافكم المؤسسية عبر حلول مبتكرة ومخصصة تلبي تطلعاتكم.</p>
+          <div className="flex flex-col sm:flex-row gap-5 justify-center">
+            <Button asChild size="lg" className="bg-primary text-white hover:bg-primary/90 px-12 h-16 text-lg font-bold rounded-2xl shadow-premium">
+              <Link href="/request-quote">ابدأ الآن</Link>
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10 px-10 h-14 text-lg">
-              عرض الخدمات الأخرى
+            <Button asChild size="lg" variant="outline" className="border-border text-white hover:bg-white/5 px-12 h-16 text-lg font-bold rounded-2xl">
+              <Link href="/#services">عرض الخدمات الأخرى</Link>
             </Button>
           </div>
         </div>

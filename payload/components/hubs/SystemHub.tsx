@@ -19,7 +19,7 @@ const SystemHub = (props: any) => {
         <DefaultTemplate {...props}>
             <HubPageLayout
                 title="إدارة النظام"
-                description="إدارة المستخدمين والوسائط والوصول إلى إعدادات النظام الأساسية."
+                description="إدارة المستخدمين والوسائط والوصول إلى إعدادات النظام الأساسية بأمان واحترافية."
             >
                 <HubCard
                     title="المستخدمون"
@@ -32,12 +32,6 @@ const SystemHub = (props: any) => {
                     description="التحكم في العناوين والروابط وإعدادات التواصل الأساسية."
                     href="/admin/globals/site-settings"
                     icon={<Ic d={P.settings} />}
-                />
-                <HubCard
-                    title="طلبات عروض الأسعار"
-                    description="إدارة طلبات عروض الأسعار الواردة من العملاء."
-                    href="/admin/collections/quote-requests"
-                    icon={<Ic d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />}
                 />
                 <HubCard
                     title="المواعيد"
@@ -62,12 +56,6 @@ const SystemHub = (props: any) => {
                     description="إدارة السير الذاتية وطلبات الانضمام للفريق."
                     href="/admin/collections/job-applications"
                     icon={<Ic d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />}
-                />
-                <HubCard
-                    title="العملاء المحتملون"
-                    description="تعقب وإدارة بيانات العملاء والفرص البيعية الجديدة."
-                    href="/admin/collections/leads"
-                    icon={<Ic d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8z" />}
                 />
             </HubPageLayout>
         </DefaultTemplate>

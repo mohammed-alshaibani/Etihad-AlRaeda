@@ -6,11 +6,6 @@ export const Appointments: CollectionConfig = {
     useAsTitle: "contactName",
     defaultColumns: ["contactName", "company", "preferredDate", "meetingType", "status"],
     group: "الطلبات والعملاء المحتملون",
-    components: {
-      views: {
-        list: { Component: "@/payload/components/CollectionListView" },
-      },
-    },
   },
   labels: {
     singular: { ar: "موعد", en: "Appointment" },
@@ -23,35 +18,72 @@ export const Appointments: CollectionConfig = {
     delete: ({ req }) => !!req.user,
   },
   fields: [
-    { name: "contactName", type: "text", required: true, label: { ar: "الاسم", en: "Name" } },
-    { name: "company", type: "text", label: { ar: "الشركة", en: "Company" } },
-    { name: "email", type: "email", required: true, label: { ar: "البريد الإلكتروني", en: "Email" } },
-    { name: "phone", type: "text", label: { ar: "الهاتف", en: "Phone" } },
     {
-      name: "meetingType",
-      type: "select",
-      label: { ar: "نوع الاجتماع", en: "Meeting Type" },
-      options: [
-        { label: { ar: "مكالمة فيديو", en: "Video Call" }, value: "video" },
-        { label: { ar: "مكالمة هاتفية", en: "Phone Call" }, value: "phone" },
-        { label: { ar: "اجتماع في المقر", en: "In-person" }, value: "inperson" },
-      ],
-      defaultValue: "video",
-    },
-    { name: "topic", type: "text", label: { ar: "موضوع الاجتماع", en: "Topic" } },
-    { name: "preferredDate", type: "date", label: { ar: "التاريخ المفضّل", en: "Preferred Date" } },
-    { name: "preferredTime", type: "text", label: { ar: "الوقت المفضّل", en: "Preferred Time" } },
-    { name: "notes", type: "textarea", label: { ar: "ملاحظات", en: "Notes" } },
-    {
-      name: "status",
-      type: "select",
-      defaultValue: "pending",
-      label: { ar: "الحالة", en: "Status" },
-      options: [
-        { label: { ar: "بانتظار التأكيد", en: "Pending" }, value: "pending" },
-        { label: { ar: "مؤكّد", en: "Confirmed" }, value: "confirmed" },
-        { label: { ar: "مكتمل", en: "Completed" }, value: "completed" },
-        { label: { ar: "ملغى", en: "Cancelled" }, value: "cancelled" },
+      type: "tabs",
+      tabs: [
+        {
+          label: { ar: "بيانات التواصل", en: "Contact Info" },
+          fields: [
+            {
+              type: "row",
+              fields: [
+                { name: "contactName", type: "text", required: true, label: { ar: "إسم المتصل", en: "Full Name" }, admin: { width: "50%" } },
+                { name: "email", type: "email", required: true, label: { ar: "البريد الإلكتروني", en: "Email" }, admin: { width: "50%" } },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                { name: "phone", type: "text", label: { ar: "رقم الجوال", en: "Phone" }, admin: { width: "50%" } },
+                { name: "company", type: "text", label: { ar: "الشركة / الجهة", en: "Organization" }, admin: { width: "50%" } },
+              ],
+            },
+          ],
+        },
+        {
+          label: { ar: "تفاصيل الموعد", en: "Meeting Details" },
+          fields: [
+            { name: "topic", type: "text", label: { ar: "موضوع الاجتماع", en: "Topic / Agenda" } },
+            {
+              type: "row",
+              fields: [
+                {
+                  name: "meetingType",
+                  type: "select",
+                  label: { ar: "نوع المقابلة", en: "Meeting Style" },
+                  admin: { width: "50%" },
+                  options: [
+                    { label: { ar: "مكالمة فيديو (أونلاين)", en: "Video Conference" }, value: "video" },
+                    { label: { ar: "مكالمة هاتفية", en: "Standard Phone Call" }, value: "phone" },
+                    { label: { ar: "حضوري في المقر", en: "In-Office Meeting" }, value: "inperson" },
+                  ],
+                  defaultValue: "video",
+                },
+                {
+                  name: "status",
+                  type: "select",
+                  defaultValue: "pending",
+                  label: { ar: "حالة الموعد", en: "Status" },
+                  admin: { width: "50%" },
+                  options: [
+                    { label: { ar: "بانتظار المراجعة", en: "Pending Approval" }, value: "pending" },
+                    { label: { ar: "تم التأكيد", en: "Confirmed" }, value: "confirmed" },
+                    { label: { ar: "تمت المقابلة", en: "Completed" }, value: "completed" },
+                    { label: { ar: "ملغى / معتذر", en: "Cancelled" }, value: "cancelled" },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                { name: "preferredDate", type: "date", label: { ar: "التاريخ المقترح", en: "Proposed Date" }, admin: { width: "50%" } },
+                { name: "preferredTime", type: "text", label: { ar: "الوقت المقترح", en: "Proposed Time" }, admin: { width: "50%" } },
+              ],
+            },
+            { name: "notes", type: "textarea", label: { ar: "ملاحظات إضافية", en: "Additional Notes" } },
+          ],
+        },
       ],
     },
   ],

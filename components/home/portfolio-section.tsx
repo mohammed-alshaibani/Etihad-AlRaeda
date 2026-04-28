@@ -51,8 +51,7 @@ export function PortfolioSection({ data }: { data?: any }) {
           </div>
           <Button
             asChild
-            variant="outline"
-            className="border-[var(--brand-navy)]/15 text-foreground"
+            className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <Link href="/portfolio">
               استعرض كل المشاريع

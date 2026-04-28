@@ -55,7 +55,7 @@ export function FaqSection() {
           <div className="mt-8 flex flex-col gap-3">
             <Button
               asChild
-              className="bg-background text-foreground hover:bg-muted"
+              className="bg-[#20345a] text-white hover:bg-[#20345a]/90"
             >
               <Link href="/faq">
                 جميع الأسئلة الشائعة
@@ -64,8 +64,7 @@ export function FaqSection() {
             </Button>
             <Button
               asChild
-              variant="outline"
-              className="border-[var(--brand-navy)]/15 text-foreground"
+              className="bg-[#b9995a] text-white hover:bg-[#b9995a]/90"
             >
               <Link href="/contact">
                 <HelpCircle className="ml-2 h-4 w-4" />

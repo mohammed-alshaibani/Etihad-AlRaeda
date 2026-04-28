@@ -14,37 +14,30 @@ export const HubCard: React.FC<HubCardProps> = ({ title, description, href, icon
     return (
         <a
             href={href}
+            className="n-card n-card-hover"
             style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "12px",
-                padding: "24px",
-                backgroundColor: "#FFFFFF !important",
-                background: "#FFFFFF !important",
-                borderRadius: "16px",
-                border: "1px solid #E5E7EB",
+                gap: "20px",
+                padding: "32px",
                 textDecoration: "none",
-                color: "#0F172A !important",
-                transition: "all 0.2s ease",
-                boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+                background: "linear-gradient(145deg, #ffffff, #f0f2f5)",
+                color: "var(--text-main) !important",
             }}
-            className="hub-card-hover"
         >
-            <style>{`
-        .hub-card-hover:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-          border-color: #D1D5DB;
-        }
-      `}</style>
-            <div style={{ color: "#111827 !important", marginBottom: "4px" }}>
+            <div style={{
+                width: "64px", height: "64px", borderRadius: "18px",
+                background: "var(--n-bg)", display: "flex", alignItems: "center",
+                justifyContent: "center", color: "var(--accent)",
+                boxShadow: "inset 4px 4px 8px var(--n-shadow-dark), inset -4px -4px 8px var(--n-shadow-light)"
+            }}>
                 {icon}
             </div>
             <div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "4px", color: "#0F172A !important" }}>
+                <h3 style={{ fontSize: "1.25rem", fontWeight: 900, marginBottom: "8px", color: "var(--text-main) !important", fontFamily: "'Cairo', sans-serif" }}>
                     {title}
                 </h3>
-                <p style={{ fontSize: "0.85rem", color: "#475569 !important", lineHeight: "1.5" }}>
+                <p style={{ fontSize: "0.95rem", color: "var(--text-sub) !important", lineHeight: "1.6" }}>
                     {description}
                 </p>
             </div>
@@ -69,18 +62,18 @@ export const HubPageLayout: React.FC<{
                 direction: "rtl",
             }}
         >
-            <header style={{ marginBottom: "56px", textAlign: "right", maxWidth: "800px", borderRight: "4px solid #3B82F6", paddingRight: "24px" }}>
-                <h1 style={{ fontSize: "2.5rem", fontWeight: 900, color: "#0F172A", marginBottom: "12px", letterSpacing: "-0.02em" }}>
+            <header style={{ marginBottom: "64px", textAlign: "right", maxWidth: "900px", borderRight: "8px solid var(--accent)", paddingRight: "32px" }}>
+                <h1 style={{ fontSize: "3.2rem", fontWeight: 900, color: "var(--text-main)", marginBottom: "16px", letterSpacing: "-0.04em", fontFamily: "'Cairo', sans-serif" }}>
                     {title}
                 </h1>
-                <p style={{ fontSize: "1.1rem", color: "#64748B", lineHeight: "1.6" }}>
+                <p style={{ fontSize: "1.2rem", color: "var(--text-sub)", lineHeight: "1.8", maxWidth: "700px" }}>
                     {description}
                 </p>
             </header>
             <div style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
-                gap: "24px",
+                gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))",
+                gap: "32px",
             }}>
                 {children}
             </div>

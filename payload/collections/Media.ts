@@ -3,10 +3,12 @@ import type { CollectionConfig } from "payload"
 export const Media: CollectionConfig = {
   slug: "media",
   admin: {
-    hidden: true, // Hide from sidebar
+    useAsTitle: "alt",
+    defaultColumns: ["alt", "filename", "filesize", "updatedAt"],
+    group: "المحتوى",
   },
   labels: {
-    singular: { ar: "وسائط", en: "Media" },
+    singular: { ar: "ملف / صورة", en: "Media File" },
     plural: { ar: "مكتبة الوسائط", en: "Media Library" },
   },
   access: {
@@ -24,5 +26,20 @@ export const Media: CollectionConfig = {
       { name: "hero", width: 1920, height: 1080, position: "centre" },
     ],
   },
-  fields: [], // No extra fields (alt, name, etc.)
+  fields: [
+    {
+      name: "alt",
+      type: "text",
+      required: true,
+      localized: true,
+      label: { ar: "النص البديل (للصور)", en: "Alt Text" },
+      admin: { description: "يُستخدم لوصف الصورة لمحركات البحث وقوارئ الشاشة" },
+    },
+    {
+      name: "caption",
+      type: "textarea",
+      localized: true,
+      label: { ar: "وصف داخلي / تسمية", en: "Caption / Description" },
+    },
+  ],
 }

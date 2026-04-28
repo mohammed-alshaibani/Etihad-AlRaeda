@@ -23,7 +23,7 @@ export function AboutSection({ data }: { data?: any }) {
   return (
     <section id="about" className="relative bg-background py-24 md:py-32">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 container-px lg:grid-cols-2">
-        <div className="relative">
+        <div className="relative hidden lg:block">
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl">
             <Image
               src={imageUrl}
@@ -42,6 +42,14 @@ export function AboutSection({ data }: { data?: any }) {
           <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-foreground md:text-4xl">
             {title}
           </h2>
+
+          {data?.coreIdea && (
+            <div className="mt-6 border-r-4 border-primary bg-primary/5 p-4 py-3 italic text-primary-foreground/90">
+              <p className="text-lg font-bold leading-relaxed text-primary">
+                {data.coreIdea}
+              </p>
+            </div>
+          )}
 
           {hasRichDescription ? (
             <div className="prose prose-invert mt-6 text-foreground leading-relaxed">

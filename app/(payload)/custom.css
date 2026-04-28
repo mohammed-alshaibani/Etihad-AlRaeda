@@ -1,310 +1,247 @@
+/* app/(payload)/custom.css */
+
 /* ================================================================
-   Etihad AlRaeda — Premium Light SaaS Admin Theme
-   Payload CMS 3.x
+   Etihad AlRaeda — High-End Luxury Dashboard Redesign
+   Aesthetic: Neumorphic / Glassmorphic / Premium SaaS
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
 
-/* ── Global Typography & Direction ────────────────────────────── */
+:root {
+  /* Core Luxury Palette */
+  --n-bg: #F0F2F5;
+  /* Pearl / Soft Grey base */
+  --n-white: #FFFFFF;
+  --n-shadow-dark: #d1d9e6;
+  /* Depth shadow */
+  --n-shadow-light: #ffffff;
+  /* Illumination shadow */
+
+  --accent: #3B82F6;
+  /* Sophisticated Blue */
+  --accent-soft: rgba(59, 130, 246, 0.1);
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+
+  --text-main: #0F172A;
+  --text-sub: #475569;
+
+  --font-size-base: 16px;
+}
+
+/* ── Global Reset & Layout ──────────────────────────────────── */
 :root,
 body,
 .payload-admin {
-  font-family: 'Tajawal', system-ui, sans-serif !important;
+  background-color: var(--n-bg) !important;
+  font-family: 'Cairo', sans-serif !important;
+  font-size: var(--font-size-base) !important;
   direction: rtl;
-  /* Enforce RTL globally for all Arabic text */
+  color: var(--text-main) !important;
 }
 
-/* Typography Overrides */
-.payload-admin h1,
-.payload-admin h2,
-.payload-admin h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
+/* ── Prevent Small Text (< 13px) ────────────────────────────── */
+* {
+  min-height: 0;
+  min-width: 0;
 }
 
-.payload-admin label.field-label {
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-align: start;
-  display: block;
-  margin-bottom: 0.25rem;
+.payload-admin span,
+.payload-admin p,
+.payload-admin a,
+.payload-admin div {
+  font-size: inherit;
 }
 
-.payload-admin .field-description,
-.payload-admin .table-cell {
-  font-size: 0.875rem;
-  color: #475569;
-  font-weight: 500;
+.payload-admin small,
+.payload-admin .muted,
+.payload-admin [class*="muted"] {
+  font-size: 13px !important;
 }
 
-/* ── Form Layout (Localized & Standard Fields) ────────────────── */
-/* Applying CSS Grid to Payload's field renderer */
-.payload-admin .render-fields {
-  display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .payload-admin .render-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* By default, fields span the full width */
-.payload-admin .render-fields>.field-type {
-  grid-column: 1 / -1;
-  width: 100%;
-}
-
-/* Localized fields side-by-side (RTL implicitly puts Arabic on right, English on left) */
-.payload-admin .render-fields>.field-type.localized,
-.payload-admin .render-fields>.field-type.half-width {
-  grid-column: span 1 / span 1;
-}
-
-/* ── Standard Input Layout & Aesthetics ───────────────────────── */
-.payload-admin input[type="text"],
-.payload-admin input[type="email"],
-.payload-admin input[type="number"],
-.payload-admin input[type="password"],
-.payload-admin textarea,
-.payload-admin select,
-.payload-admin .react-select__control {
-  height: 2.75rem;
-  padding: 0.5rem 0.75rem;
-  background-color: #f9fafb;
-  border: 1px solid transparent;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  color: #1e293b;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  direction: rtl;
-  text-align: start;
-}
-
-.payload-admin input:focus,
-.payload-admin textarea:focus,
-.payload-admin select:focus,
-.payload-admin .react-select__control--is-focused {
-  background-color: #ffffff !important;
-  box-shadow: 0 0 0 2px #1e293b, 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
-  border-color: transparent !important;
-  outline: none !important;
-}
-
-/* ── Tables Aesthetics ────────────────────────────────────────── */
-.payload-admin .collection-list__table,
-.payload-admin table {
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  border: none;
-  overflow: hidden;
-  width: 100%;
-  border-collapse: collapse !important;
-}
-
-.payload-admin table thead {
-  background-color: #f9fafb;
-}
-
-.payload-admin table th {
-  padding: 0.75rem 1rem;
-  text-align: start;
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #1e293b;
-  text-transform: uppercase;
-  letter-spacing: 0.025em;
-  border-bottom: 2px solid #f3f4f6;
-}
-
-.payload-admin table td {
-  padding: 1rem;
-  text-align: start;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #475569;
-  border-bottom: 1px solid #f9fafb;
-}
-
-.payload-admin table tbody tr:hover {
-  background-color: rgba(249, 250, 251, 0.5);
-  transition: background-color 0.2s ease;
-}
-
-/* ── Table Actions (Delete Button) ────────────────────────────── */
-.payload-admin .row-actions button.delete,
-.payload-admin .cell-actions .delete-button {
-  background-color: #fef2f2;
-  color: #dc2626;
-  padding: 0.5rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.payload-admin .row-actions button.delete:hover,
-.payload-admin .cell-actions .delete-button:hover {
-  background-color: #fee2e2;
-}
-
-/* ── RTL Alignments ───────────────────────────────────────────── */
-.payload-admin .document-fields,
-.payload-admin .dashboard__wrap,
-.payload-admin .collection-list,
-.payload-admin .document-header {
-  text-align: start;
-  direction: rtl !important;
-}
-
-/* Force standard action buttons to match height */
-.payload-admin .btn {
-  height: 2.75rem;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 700;
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.payload-admin .btn--style-primary {
-  background-color: #0f172a;
-  color: #ffffff;
-  border: 1px solid transparent;
-}
-
-.payload-admin .btn--style-primary:hover {
-  background-color: #1e293b;
-}
-
-.payload-admin .btn--style-secondary {
-  background-color: #ffffff;
-  color: #1e293b;
-  border: 1px solid #e5e7eb;
-}
-
-.payload-admin .btn--style-secondary:hover {
-  background-color: #f9fafb;
-}
-
-/* ── TASK 1: Hide Redundant Burger Menu ───────────────────────── */
-.template-default__header .menu-button,
-.header__mobile-menu-button {
-  display: none !important;
-}
-
-/* ── TASK 3: Restrict Media Upload Fields ─────────────────────── */
-.file-field .file-field__upload .file-field__upload-actions .btn--style-primary,
-.file-field .file-field__upload .dropzone {
-  display: none !important;
-}
-
-/* ── TASK 4: Form width constriction ─────────────────────────── */
-.payload-admin .document-fields {
-  max-width: 1000px !important;
-  margin: 0 auto !important;
-  padding-bottom: 4rem;
-}
-
-.payload-admin .document-header__title {
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-/* ── Force Light Theme Overrides ──────────────────────────────── */
-:root, [data-theme="dark"], [data-theme="light"] {
-  --theme-bg: #F8FAFC !important;
-  --theme-elevation-0: #FFFFFF !important;
-  --theme-elevation-50: #F8FAFC !important;
-  --theme-elevation-100: #FFFFFF !important;
-  --theme-elevation-150: #F1F5F9 !important;
-  --theme-elevation-200: #E2E8F0 !important;
-  --theme-text: #0F172A !important;
-}
-
-.payload-admin .card,
-.payload-admin [class*="card"],
-.payload-admin .dashboard__card,
-.payload-admin .hub-card,
-.payload-admin .template-default__wrap {
-  background-color: #F8FAFC !important;
-}
-
-/* ── Hide Media Library Selection & Editing ─────────────────── */
-/* Target all possible "Choose from List / Use Existing" buttons and triggers (English & Arabic) */
-.payload-admin .upload__list-selector,
-.payload-admin .upload__use-existing,
-.payload-admin .list-drawer__trigger,
-.payload-admin button[aria-label*="Choose"],
-.payload-admin button[aria-label*="Select"],
-.payload-admin button[aria-label*="Existing"],
-.payload-admin button[aria-label*="Library"],
-.payload-admin button[aria-label*="اختر"],
-.payload-admin button[aria-label*="قائمة"],
-.payload-admin button[class*="list-selector"],
-.payload-admin button[class*="use-existing"],
-.payload-admin .upload__list-drawer-trigger {
+/* ── Hide Locale Switcher & Bilingual Elements ────────────────── */
+.localizer,
+.locale-switcher,
+.nav__localizer,
+.header__localizer,
+[class*="localizer"],
+[class*="locale-switcher"],
+[id*="localizer"],
+[id*="locale-switcher"],
+.nav__account .nav__link--locale,
+.account__locale-switcher {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
-  width: 0 !important;
-  height: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
 }
 
-/* Hide field descriptions globally to keep forms clean */
-.payload-admin .field-description,
-.payload-admin [class*="description"] {
-  display: none !important;
+/* ── Neumorphic Utility Classes ─────────────────────────────── */
+.n-card {
+  background: var(--n-bg) !important;
+  border: none !important;
+  border-radius: 20px !important;
+  box-shadow: 8px 8px 16px var(--n-shadow-dark), -8px -8px 16px var(--n-shadow-light) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Hides "Edit" and "Details" buttons after a file is uploaded */
-.payload-admin .upload__edit,
-.payload-admin .upload__details,
-.payload-admin a[class*="upload__edit"],
-.payload-admin button[class*="upload__edit"],
-.payload-admin .doc-drawer__trigger {
-  display: none !important;
+.n-card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 12px 12px 24px var(--n-shadow-dark), -12px -12px 24px var(--n-shadow-light) !important;
 }
 
-/* Centering the "Upload New" and "Drag & Drop" area */
-.payload-admin .upload__wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  border: 2px dashed #E2E8F0;
-  border-radius: 12px;
-  background: #FFFFFF;
+.n-card-in {
+  background: var(--n-bg) !important;
+  box-shadow: inset 2px 2px 5px var(--n-shadow-dark), inset -2px -2px 5px var(--n-shadow-light) !important;
 }
 
-/* Make "Create New" button prominent */
-.payload-admin .upload__wrap button.upload__file-picker {
-  background: #0F172A !important;
-  color: #FFFFFF !important;
-  padding: 12px 24px !important;
-  border-radius: 8px !important;
+/* ── Glassmorphism Utility ─────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ── Typography Refinement ─────────────────────────────────── */
+.payload-admin h1,
+.payload-admin h2,
+.payload-admin h3,
+.payload-admin h4,
+.payload-admin h5,
+.payload-admin h6 {
+  font-family: 'Cairo', sans-serif !important;
+  letter-spacing: -0.01em;
+  font-weight: 800 !important;
+}
+
+.payload-admin label.field-label {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: var(--text-main) !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.payload-admin input,
+.payload-admin select,
+.payload-admin textarea,
+.payload-admin .react-select {
+  font-size: 1rem !important;
+  /* 16px */
+  font-family: 'Cairo', sans-serif !important;
+}
+
+/* ── UI Overrides ────────────────────────────────────────────── */
+/* Cards & Lists */
+.payload-admin .card,
+.payload-admin [class*="card"],
+.payload-admin .list-table {
+  background: var(--n-bg) !important;
+  border-radius: 20px !important;
+  border: none !important;
+  box-shadow: 6px 6px 12px var(--n-shadow-dark), -6px -6px 12px var(--n-shadow-light) !important;
+}
+
+/* Status Badges - Sophisticated Bubbles */
+.badge {
+  padding: 6px 16px !important;
+  border-radius: 30px !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  /* Minimum visibility */
+  text-transform: uppercase;
+}
+
+.badge--success {
+  background: #d1fae5 !important;
+  color: #065f46 !important;
+}
+
+.badge--warning {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.badge--danger {
+  background: #fee2e2 !important;
+  color: #991b1b !important;
+}
+
+/* ── Buttons - Premium Flush Look ──────────────────────────── */
+.payload-admin .btn,
+.payload-admin button {
+  background: var(--n-bg) !important;
+  color: var(--text-main) !important;
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 4px 4px 8px var(--n-shadow-dark), -4px -4px 8px var(--n-shadow-light) !important;
+  font-weight: 800 !important;
+  transition: all 0.2s ease;
+}
+
+.payload-admin .btn:active,
+.payload-admin button:active {
+  box-shadow: inset 3px 3px 6px var(--n-shadow-dark), inset -3px -3px 6px var(--n-shadow-light) !important;
+}
+
+.payload-admin .btn--style-primary {
+  background: linear-gradient(145deg, #3B82F6, #2563EB) !important;
+  color: #ffffff !important;
+  box-shadow: 4px 4px 8px var(--n-shadow-dark) !important;
+}
+
+/* ── Layout Fixes ────────────────────────────────────────────── */
+.payload-admin .document-fields {
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  background: transparent !important;
+}
+
+.payload-admin header.document-header {
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Sidebar Specific - Glassmorphic Dock */
+.payload-admin .nav {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(20px) !important;
+  border: none !important;
+  box-shadow: 1px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Sparkline Animation Placeholder */
+@keyframes sparkline {
+  from {
+    stroke-dashoffset: 100;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.sparkline-path {
+  stroke-dasharray: 100;
+  animation: sparkline 2s ease-out forwards;
+}
+
+/* ── Profile & Account Aesthetics ───────────────────────────── */
+.payload-admin .account,
+.payload-admin .nav__account,
+.payload-admin [class*="account"] {
+  font-family: 'Cairo', sans-serif !important;
   font-weight: 700 !important;
 }
 
-.payload-admin .card,
-.payload-admin [class*="card"],
-.payload-admin .dashboard__card,
-.payload-admin .hub-card,
-.payload-admin .data-card-grid > div {
-  background-color: #FFFFFF !important;
-  background: #FFFFFF !important;
-  color: #0F172A !important;
+.payload-admin .app-header {
+  background: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--n-shadow-dark) !important;
+}
+
+/* Ensure no EN text leaks in generic labels */
+[lang="en"] {
+  display: none !important;
 }

@@ -38,6 +38,7 @@ import { JobApplications } from "./payload/collections/JobApplications"
 import { Careers } from "./payload/collections/Careers"
 import { Leads } from "./payload/collections/Leads"
 import { Offers } from "./payload/collections/Offers"
+import { Workflow } from "./payload/collections/Workflow"
 
 // ─── Globals ─────────────────────────────────────────────────────────────────
 import { SiteSettings } from "./payload/globals/SiteSettings"
@@ -99,12 +100,16 @@ export default buildConfig({
     },
   },
 
-  editor: lexicalEditor({}),
+  editor: lexicalEditor({
+    features: ({ defaultFeatures }) => [
+      ...defaultFeatures,
+      // Lexical natively handles markdown shortcuts (# H1, > Quote, - List)
+    ],
+  }),
   // ─── Localization ──────────────────────────────────────────────────────────
   localization: {
     locales: [
       { label: "العربية", code: "ar" },
-      { label: "English", code: "en" },
     ],
     defaultLocale: "ar",
     fallback: true,
@@ -147,6 +152,7 @@ export default buildConfig({
     Careers,
     Offers,
     Leads,
+    Workflow,
   ],
   // ─── Globals ──────────────────────────────────────────────────────────────
   globals: [SiteSettings, Homepage, AboutPage, Navigation, PaymentGateways],

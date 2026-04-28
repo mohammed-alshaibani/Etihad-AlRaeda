@@ -67,11 +67,29 @@ export default async function HomePage() {
     console.error("Error fetching posts:", error)
   }
 
+  // Get hero slides from global or fetch active ones as fallback
+  let heroSlides = homepage?.heroSlides || []
+  if (heroSlides.length === 0) {
+    try {
+      const slidesRes = await payload.find({
+        collection: "hero-slides",
+        where: {
+          isActive: { equals: true },
+        },
+        sort: "order",
+        limit: 5,
+      })
+      heroSlides = slidesRes.docs
+    } catch (error) {
+      console.error("Error fetching hero slides fallback:", error)
+    }
+  }
+
   return (
     <>
-      <HeroSection heroSlides={homepage?.heroSlides || []} />
-      <PartnersStrip data={brands} />
+      <HeroSection heroSlides={heroSlides} />
       <AboutSection data={homepage?.about || {}} />
+      <PartnersStrip data={brands} />
       <ServicesSection data={homepage?.servicesSection || {}} services={services} />
       <PortfolioSection data={homepage?.portfolioSection || {}} />
       <ProcessSection data={homepage?.processSection || {}} />

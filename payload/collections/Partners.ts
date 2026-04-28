@@ -7,16 +7,36 @@ export const Partners: CollectionConfig = {
     singular: { ar: "شريك / عميل", en: "Partner" },
     plural: { ar: "الشركاء والعملاء", en: "Partners & Clients" },
   },
-    access: {
+  access: {
     read: () => true,
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
-    { name: "name", type: "text", required: true, localized: true, label: { ar: "الاسم", en: "Name" } },
-    { name: "logo", type: "upload", relationTo: "media", label: { ar: "الشعار", en: "Logo" } },
-    { name: "website", type: "text", label: { ar: "الموقع", en: "Website" } },
-    { name: "order", type: "number", defaultValue: 0, label: { ar: "الترتيب", en: "Order" } },
+    {
+      type: "tabs",
+      tabs: [
+        {
+          label: { ar: "بيانات الشريك", en: "Partner Info" },
+          fields: [
+            { name: "name", type: "text", required: true, localized: true, label: { ar: "اسم الشركة", en: "Company Name" } },
+            { name: "logo", type: "upload", relationTo: "media", required: true, label: { ar: "شعار الشريك", en: "Official Logo" } },
+          ],
+        },
+        {
+          label: { ar: "الإعدادات", en: "Settings" },
+          fields: [
+            {
+              type: "row",
+              fields: [
+                { name: "website", type: "text", label: { ar: "رابط الموقع", en: "Website URL" }, admin: { width: "50%" } },
+                { name: "order", type: "number", defaultValue: 0, label: { ar: "ترتيب العرض", en: "Display Order" }, admin: { width: "50%" } },
+              ],
+            },
+          ],
+        },
+      ],
+    },
   ],
 }

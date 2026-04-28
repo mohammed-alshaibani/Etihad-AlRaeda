@@ -40,7 +40,7 @@ export function InsightsSection({ data }: { data?: any[] }) {
   }) : defaultArticles;
 
   return (
-    <section className="bg-muted py-20 md:py-28">
+    <section id="blog" className="bg-muted py-20 md:py-28">
       <div className="mx-auto max-w-7xl container-px">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">

@@ -17,6 +17,20 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/quote",
+        destination: "https://forms.gle/vx4zh7ed2PCreFds6",
+        permanent: true,
+      },
+      {
+        source: "/request-quote",
+        destination: "https://forms.gle/vx4zh7ed2PCreFds6",
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig)

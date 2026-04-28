@@ -1,0 +1,76 @@
+/* payload/styles/admin.css */
+
+:root {
+    /* Scale font sizes proportionally for a premium, accessible feel */
+    --font-size-base: 18px;
+    --font-size-s: 0.95rem;
+    --font-size-m: 1.15rem;
+    /* Larger than default 1rem */
+    --font-size-l: 1.4rem;
+    --font-size-xl: 1.8rem;
+
+    /* Line heights for readability */
+    --line-height-base: 1.65;
+}
+
+/* Scaling Global Typography */
+.payload-admin label,
+.payload-admin .field-label,
+.payload-admin .field-type {
+    font-size: var(--font-size-m) !important;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* Table Data Scaling */
+.payload-admin .list-table th,
+.payload-admin .list-table td {
+    font-size: var(--font-size-s) !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/* Scaling Inputs & Selects */
+.payload-admin input,
+.payload-admin select,
+.payload-admin textarea,
+.payload-admin .rich-text-editor {
+    font-size: var(--font-size-m) !important;
+    padding: 0.75rem 1rem !important;
+}
+
+/* Breadcrumbs & Titles */
+.payload-admin .step-nav,
+.payload-admin .doc-header__title {
+    font-size: var(--font-size-l) !important;
+}
+
+/* Sidebar Custom Overrides (Ensure it matches scaled typography) */
+[dir="rtl"] .payload-admin .nav {
+    font-size: var(--font-size-m);
+}
+
+/* Clean up double menu conflict via CSS if needed 
+   Hiding any redundant default sidebar that might escape the override slot */
+.payload-admin .nav--default {
+    display: none !important;
+}
+
+/* High-End Scrollbar for Premium Feel */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}

@@ -23,8 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { BrandLogo } from "@/components/brand-logo"
 import { mainNav } from "@/lib/navigation"
-import { CartDrawer } from "@/components/shop/cart-drawer"
-import { GlobalSearch } from "@/components/global-search"
+import { SearchOverlay } from "@/components/search-overlay"
 
 
 
@@ -56,15 +55,25 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
             <span>الأحد - الخميس، 8:30 ص - 5:30 م</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/about" className="hover:text-foreground">
-              من نحن
-            </Link>
-            <Link href="/support" className="hover:text-foreground">
-              الدعم
-            </Link>
-            <Link href="/careers" className="hover:text-foreground">
-              الوظائف
-            </Link>
+            {navigation?.secondaryMenu?.length > 0 ? (
+              navigation.secondaryMenu.map((item: any, i: number) => (
+                <Link key={i} href={item.url || "#"} className="hover:text-foreground">
+                  {item.label}
+                </Link>
+              ))
+            ) : (
+              <>
+                <Link href="/about" className="hover:text-foreground">
+                  من نحن
+                </Link>
+                <Link href="/support" className="hover:text-foreground">
+                  الدعم
+                </Link>
+                <Link href="/careers" className="hover:text-foreground">
+                  الوظائف
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -110,9 +119,9 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
                         {item.label}
                       </DropdownMenuLabel>
                       {item.items?.map((subItem: any) => (
-                        <DropdownMenuItem key={subItem.href} asChild>
+                        <DropdownMenuItem key={subItem.url || subItem.href} asChild>
                           <Link
-                            href={subItem.href || "#"}
+                            href={subItem.url || subItem.href || "#"}
                             className="flex flex-col items-start gap-0.5 rounded-md px-2 py-2"
                           >
                             <span className="text-sm font-semibold">
@@ -133,15 +142,15 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
 
               return (
                 <Link
-                  key={item.href}
-                  href={item.href || "#"}
+                  key={item.url || item.href}
+                  href={item.url || item.href || "#"}
                   className={cn(
                     "relative rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition hover:text-foreground",
-                    item.href && isActive(item.href) && "text-foreground"
+                    (item.url || item.href) && isActive(item.url || item.href) && "text-foreground"
                   )}
                 >
                   {item.label}
-                  {item.href && isActive(item.href) && (
+                  {(item.url || item.href) && isActive(item.url || item.href) && (
                     <span className="absolute inset-x-3 -bottom-0.5 h-0.5 rounded-full bg-primary" />
                   )}
                 </Link>
@@ -151,29 +160,19 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
 
           {/* CTA cluster */}
           <div className="flex items-center gap-3">
-            <div className="hidden lg:block mr-2">
-              <GlobalSearch />
-            </div>
-            <Button
+            <SearchOverlay />
 
-              asChild
-              variant="ghost"
-              className="hidden text-foreground hover:bg-foreground/10 hover:text-foreground md:inline-flex"
-            >
-              <Link href="/request-quote">طلب عرض سعر</Link>
-            </Button>
             <Button
               asChild
-              className="hidden bg-primary text-primary-foreground shadow-premium hover:bg-primary/90 md:inline-flex"
+              className="bg-primary text-primary-foreground shadow-premium hover:bg-primary/90 md:inline-flex"
             >
               <Link href="/shop">
                 متجرنا
                 <ArrowLeft className="mr-1.5 h-4 w-4" />
               </Link>
             </Button>
-            <CartDrawer />
 
-            {/* Mobile */}
+            {/* Mobile Trigger */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -190,6 +189,7 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
                 className="w-[88%] max-w-sm overflow-y-auto bg-background p-0"
               >
                 <SheetHeader className="border-b border-border p-5 text-right">
+                  <SheetTitle className="sr-only">القائمة الرئيسية</SheetTitle>
                   <SheetTitle asChild>
                     <BrandLogo tone="navy" />
                   </SheetTitle>
@@ -219,11 +219,11 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
                       }
                       return (
                         <Link
-                          key={item.href}
-                          href={item.href || "#"}
+                          key={item.url || item.href}
+                          href={item.url || item.href || "#"}
                           className={cn(
                             "flex items-center justify-between rounded-md px-3 py-3 text-base font-semibold text-foreground hover:bg-foreground/5",
-                            item.href && isActive(item.href) && "text-primary"
+                            (item.url || item.href) && isActive(item.url || item.href) && "text-primary"
                           )}
                         >
                           {item.label}
@@ -245,7 +245,7 @@ export function SiteHeader({ navigation }: { navigation?: any }) {
                       variant="outline"
                       className="border-foreground/15 text-foreground hover:bg-foreground/5"
                     >
-                      <Link href="/quote">طلب عرض سعر</Link>
+                      <Link href="/request-quote">طلب عرض سعر</Link>
                     </Button>
                   </div>
                 </div>

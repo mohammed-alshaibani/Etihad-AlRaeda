@@ -13,11 +13,13 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
   const slides = heroSlides && heroSlides.length > 0 ? heroSlides : [
     {
       headline: "نحن شريكك المسؤول عن تشغيل منشأتك بالكامل… نوفر لك إدارة متكاملة لعملك بدون تعقيد.",
+      eyebrow: "إدارة المرافق المتكاملة",
       subheadline: "إدارة المرافق بالكامل من جهة واحدة = كفاءة أعلى + تكلفة أقل + راحة بال",
       primaryCta: { label: "طلب عرض سعر", url: "/quote" },
       secondaryCta: { label: "حجز استشارة مجانية", url: "/book-appointment" },
       mediaType: "image",
-      backgroundImage: { url: "/images/hero-boardroom.jpg" }
+      backgroundImage: { url: "/images/hero-boardroom.jpg" },
+      overlayOpacity: 20
     }
   ]
 
@@ -31,7 +33,7 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
   }, [slides.length])
 
   return (
-    <section className="relative overflow-hidden text-foreground min-h-[85vh] flex items-center bg-transparent">
+    <section id="home" className="relative overflow-hidden text-foreground min-h-[85vh] flex items-center bg-transparent">
       {/* Background Media Container */}
       <div className="absolute inset-0 z-0">
         {slides.map((slide, index) => {
@@ -71,8 +73,28 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
         })}
       </div>
 
-      {/* Subtle overlay for text readability (very light) */}
-      <div className="absolute inset-0 z-1 bg-black/20 pointer-events-none" />
+      {/* Lines/Grid Design Overlay */}
+      <div
+        className="absolute inset-0 z-2 pointer-events-none opacity-40"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(56, 189, 248, 0.15) 1px, transparent 1px),
+                            linear-gradient(to bottom, rgba(56, 189, 248, 0.15) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }}
+      />
+
+      {/* Dynamic overlay for text readability */}
+      {slides.map((slide, index) => {
+        if (index !== currentSlide) return null
+        const opacity = (slide.overlayOpacity ?? 20) / 100
+        return (
+          <div
+            key={`overlay-${index}`}
+            className="absolute inset-0 z-1 pointer-events-none transition-opacity duration-1000"
+            style={{ backgroundColor: `rgba(15, 23, 42, ${opacity})` }} // Using Navy (0F172A) instead of pure black for premium feel
+          />
+        )
+      })}
 
       <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start justify-center container-px py-24 md:py-32 lg:py-40 z-10">
 
@@ -80,6 +102,27 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
         <div className="relative w-full max-w-4xl h-full flex flex-col items-start text-start">
           {slides.map((slide, index) => {
             if (index !== currentSlide) return null
+
+            // Button Fallbacks based on User Mapping
+            // a. Consultation -> /book-appointment
+            // b. Inspection -> iyP7WQyRGWBEGnep6
+            // c. Quote -> vx4zh7ed2PCreFds6
+
+            const primaryLabel = slide.primaryCta?.label || "طلب عرض سعر"
+            const secondaryLabel = slide.secondaryCta?.label || "حجز معاينة مجانية"
+
+            // Primary Mapping (Usually Quote)
+            let primaryUrl = slide.primaryCta?.url || "/request-quote"
+            if (primaryLabel.includes("عرض سعر")) primaryUrl = "/request-quote"
+            if (primaryLabel.includes("استشارة")) primaryUrl = "/book-appointment"
+            if (primaryLabel.includes("معاينة")) primaryUrl = "https://forms.gle/iyP7WQyRGWBEGnep6"
+
+            // Secondary Mapping (Usually Inspection or Consultation)
+            let secondaryUrl = slide.secondaryCta?.url || "https://forms.gle/iyP7WQyRGWBEGnep6"
+            if (secondaryLabel.includes("معاينة")) secondaryUrl = "https://forms.gle/iyP7WQyRGWBEGnep6"
+            if (secondaryLabel.includes("استشارة")) secondaryUrl = "/book-appointment?src=hero"
+            if (secondaryLabel.includes("عرض سعر")) secondaryUrl = "/request-quote"
+
             return (
               <div
                 key={index}
@@ -101,30 +144,27 @@ export function HeroSection({ heroSlides }: { heroSlides?: any[] }) {
                 )}
 
                 <div className="mt-10 flex flex-wrap items-center gap-4 w-full">
-                  {slide.primaryCta?.label && (
-                    <Button
-                      asChild
-                      size="lg"
-                      className="h-14 bg-primary px-8 text-base font-semibold text-primary-foreground shadow-premium-lg hover:bg-primary/90 flex-1 md:flex-none justify-center"
-                    >
-                      <Link href={slide.primaryCta.url || "/quote"}>
-                        {slide.primaryCta.label}
-                        <ArrowLeft className="mr-2 h-5 w-5" />
-                      </Link>
-                    </Button>
-                  )}
-                  {slide.secondaryCta?.label && (
-                    <Button
-                      asChild
-                      size="lg"
-                      variant="outline"
-                      className="h-14 border-foreground/20 bg-foreground/5 px-8 text-base font-semibold text-foreground backdrop-blur hover:bg-foreground/10 hover:text-foreground flex-1 md:flex-none justify-center"
-                    >
-                      <Link href={slide.secondaryCta.url || "/book-appointment"}>
-                        {slide.secondaryCta.label}
-                      </Link>
-                    </Button>
-                  )}
+                  <Button
+                    asChild
+                    size="lg"
+                    className="h-14 bg-primary px-8 text-base font-semibold text-primary-foreground shadow-premium-lg hover:bg-primary/90 flex-1 md:flex-none justify-center"
+                  >
+                    <Link href={primaryUrl}>
+                      {primaryLabel}
+                      <ArrowLeft className="mr-2 h-5 w-5" />
+                    </Link>
+                  </Button>
+
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="h-14 border-foreground/20 bg-foreground/5 px-8 text-base font-semibold text-foreground backdrop-blur hover:bg-foreground/10 hover:text-foreground flex-1 md:flex-none justify-center"
+                  >
+                    <Link href={secondaryUrl}>
+                      {secondaryLabel}
+                    </Link>
+                  </Button>
                 </div>
               </div>
             )

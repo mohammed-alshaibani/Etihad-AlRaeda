@@ -6,11 +6,6 @@ export const ContactMessages: CollectionConfig = {
     useAsTitle: "name",
     defaultColumns: ["name", "email", "subject", "status", "createdAt"],
     group: "الطلبات والعملاء المحتملون",
-    components: {
-      views: {
-        list: { Component: "@/payload/components/CollectionListView" },
-      },
-    },
   },
   labels: {
     singular: { ar: "رسالة", en: "Message" },
@@ -23,21 +18,46 @@ export const ContactMessages: CollectionConfig = {
     delete: ({ req }) => !!req.user,
   },
   fields: [
-    { name: "name", type: "text", required: true, label: { ar: "الاسم", en: "Name" } },
-    { name: "email", type: "email", required: true, label: { ar: "البريد الإلكتروني", en: "Email" } },
-    { name: "phone", type: "text", label: { ar: "الهاتف", en: "Phone" } },
-    { name: "company", type: "text", label: { ar: "الشركة", en: "Company" } },
-    { name: "subject", type: "text", label: { ar: "الموضوع", en: "Subject" } },
-    { name: "message", type: "textarea", required: true, label: { ar: "الرسالة", en: "Message" } },
     {
-      name: "status",
-      type: "select",
-      defaultValue: "new",
-      label: { ar: "الحالة", en: "Status" },
-      options: [
-        { label: { ar: "جديد", en: "New" }, value: "new" },
-        { label: { ar: "تم الرد", en: "Replied" }, value: "replied" },
-        { label: { ar: "مغلق", en: "Closed" }, value: "closed" },
+      type: "tabs",
+      tabs: [
+        {
+          label: { ar: "بيانات المرسل", en: "Sender" },
+          fields: [
+            {
+              type: "row",
+              fields: [
+                { name: "name", type: "text", required: true, label: { ar: "الاسم", en: "Name" }, admin: { width: "50%" } },
+                { name: "email", type: "email", required: true, label: { ar: "البريد الإلكتروني", en: "Email" }, admin: { width: "50%" } },
+              ],
+            },
+            {
+              type: "row",
+              fields: [
+                { name: "phone", type: "text", label: { ar: "رقم الهاتف", en: "Phone" }, admin: { width: "50%" } },
+                { name: "company", type: "text", label: { ar: "اسم الشركة", en: "Company" }, admin: { width: "50%" } },
+              ],
+            },
+          ],
+        },
+        {
+          label: { ar: "تفاصيل الرسالة", en: "Message" },
+          fields: [
+            { name: "subject", type: "text", label: { ar: "الموضوع", en: "Subject" } },
+            { name: "message", type: "textarea", required: true, label: { ar: "نص الرسالة", en: "Message Content" } },
+            {
+              name: "status",
+              type: "select",
+              defaultValue: "new",
+              label: { ar: "حالة الرسالة", en: "Status" },
+              options: [
+                { label: { ar: "رسالة جديدة", en: "New" }, value: "new" },
+                { label: { ar: "تم الرد عليها", en: "Replied" }, value: "replied" },
+                { label: { ar: "مغلقة", en: "Closed" }, value: "closed" },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],

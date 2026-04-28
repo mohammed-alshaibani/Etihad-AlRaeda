@@ -6,12 +6,11 @@ export const Users: CollectionConfig = {
     useAsTitle: "email",
     group: "الإدارة",
     defaultColumns: ["email", "name", "role", "createdAt"],
-    hidden: true,
   },
   auth: true,
   labels: {
-    singular: { ar: "مستخدم", en: "User" },
-    plural: { ar: "المستخدمين", en: "Users" },
+    singular: { ar: "مستخدم نظام", en: "Admin User" },
+    plural: { ar: "مشرفي النظام", en: "Administrators" },
   },
   access: {
     read: ({ req: { user } }) => Boolean(user),
@@ -23,19 +22,20 @@ export const Users: CollectionConfig = {
     {
       name: "name",
       type: "text",
-      label: { ar: "الاسم", en: "Name" },
+      required: true,
+      label: { ar: "الاسم الكامل", en: "Full Name" },
     },
     {
       name: "role",
       type: "select",
       defaultValue: "editor",
       options: [
-        { label: "Admin", value: "admin" },
-        { label: "Editor", value: "editor" },
+        { label: "Admin (Full Access)", value: "admin" },
+        { label: "Editor (Limited Content)", value: "editor" },
       ],
       required: true,
       saveToJWT: true,
-      label: { ar: "الصلاحية", en: "Role" },
+      label: { ar: "صلاحية الدخول", en: "System Role" },
     },
   ],
 }

@@ -21,7 +21,7 @@ const WebsiteHub = (props: any) => {
         <DefaultTemplate {...props}>
             <HubPageLayout
                 title="إدارة الموقع"
-                description="تحكم في محتوى الصفحات والخدمات ومعرض الأعمال والمدونة."
+                description="تحكم في محتوى الصفحات والخدمات ومعرض الأعمال والمدونة بلمسات فنية متطورة."
             >
                 <HubCard
                     title="الصفحات"
@@ -82,12 +82,6 @@ const WebsiteHub = (props: any) => {
                     description="نشر وإدارة آخر الأخبار والبيانات الصحفية."
                     href="/admin/collections/news"
                     icon={<Ic d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10l4 4v10a2 2 0 01-2 2zM14 2v6h6M8 13h8M8 17h8" />}
-                />
-                <HubCard
-                    title="المصادر"
-                    description="إدارة الكتيبات والمصادر التعليمية القابلة للتحميل."
-                    href="/admin/collections/resources"
-                    icon={<Ic d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" />}
                 />
                 <HubCard
                     title="الوظائف"

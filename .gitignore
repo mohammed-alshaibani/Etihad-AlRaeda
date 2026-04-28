@@ -17,6 +17,11 @@ next.user-config.*
 *.db-journal
 *.sqlite
 *.sqlite-journal
+payload.db.bak
+
+# Test scripts
+test-flow.ts
+test-save.ts
 
 # Common ignores
 node_modules

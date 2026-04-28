@@ -19,60 +19,92 @@ export const ShippingZones: CollectionConfig = {
     },
     fields: [
         {
-            name: "name",
-            type: "text",
-            required: true,
-            localized: true,
-            label: { ar: "اسم منطقة الشحن", en: "Zone Name" },
-        },
-        {
-            name: "carrier",
-            type: "select",
-            required: true,
-            defaultValue: "aramex",
-            label: { ar: "شركة الشحن", en: "Carrier" },
-            options: [
-                { label: "Aramex", value: "aramex" },
-                { label: "SMSA Express", value: "smsa" },
-                { label: { ar: "شحن ذاتي", en: "Self Delivery" }, value: "self" },
-                { label: { ar: "أخرى", en: "Other" }, value: "other" },
+            type: "tabs",
+            tabs: [
+                {
+                    label: { ar: "تكوين المنطقة", en: "Zone Config" },
+                    fields: [
+                        {
+                            name: "name",
+                            type: "text",
+                            required: true,
+                            localized: true,
+                            label: { ar: "اسم المنطقة", en: "Zone Name" },
+                        },
+                        {
+                            type: "row",
+                            fields: [
+                                {
+                                    name: "carrier",
+                                    type: "select",
+                                    required: true,
+                                    defaultValue: "aramex",
+                                    label: { ar: "شركة الشحن", en: "Carrier" },
+                                    admin: { width: "50%" },
+                                    options: [
+                                        { label: "Aramex", value: "aramex" },
+                                        { label: "SMSA Express", value: "smsa" },
+                                        { label: { ar: "توصيل خاص", en: "Private Delivery" }, value: "self" },
+                                        { label: { ar: "أخرى", en: "Other" }, value: "other" },
+                                    ],
+                                },
+                                {
+                                    name: "regions",
+                                    type: "select",
+                                    hasMany: true,
+                                    label: { ar: "المناطق المدعومة", en: "Covered Regions" },
+                                    admin: { width: "50%" },
+                                    options: [
+                                        "الرياض", "مكة المكرمة", "المدينة المنورة", "القصيم", "المنطقة الشرقية",
+                                        "عسير", "تبوك", "حائل", "الحدود الشمالية", "جازان", "نجران", "الباحة", "الجوف",
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    label: { ar: "التسعير", en: "Pricing" },
+                    fields: [
+                        {
+                            name: "rates",
+                            type: "array",
+                            required: true,
+                            label: { ar: "خطة الأسعار", en: "Pricing Plan" },
+                            admin: { initCollapsed: true },
+                            fields: [
+                                {
+                                    type: "row",
+                                    fields: [
+                                        { name: "label", type: "text", localized: true, label: { ar: "عنوان الخطة (مثال: سريع)", en: "Rate Label" }, admin: { width: "50%" } },
+                                        { name: "price", type: "number", required: true, label: { ar: "سعر الشحن (SAR)", en: "Price" }, admin: { width: "50%" } },
+                                    ],
+                                },
+                                { name: "estimatedDays", type: "text", label: { ar: "المدة التقديرية", en: "Estimated delivery time" } },
+                            ],
+                        },
+                        {
+                            name: "freeShippingThreshold",
+                            type: "number",
+                            min: 0,
+                            label: { ar: "حد الشحن المجاني (SAR)", en: "Free Shipping Milestone" },
+                            admin: { description: "اتركه فارغاً لتعطيل الميزة" },
+                        },
+                    ],
+                },
+                {
+                    label: { ar: "الإعدادات", en: "Settings" },
+                    fields: [
+                        {
+                            name: "isActive",
+                            type: "checkbox",
+                            defaultValue: true,
+                            label: { ar: "تنشيط هذه المنطقة", en: "Enable Zone" },
+                            admin: { style: { marginTop: "20px" } },
+                        },
+                    ],
+                },
             ],
-        },
-        {
-            name: "regions",
-            type: "select",
-            hasMany: true,
-            label: { ar: "المناطق المشمولة", en: "Covered Regions" },
-            options: [
-                "الرياض", "مكة المكرمة", "المدينة المنورة", "القصيم", "المنطقة الشرقية",
-                "عسير", "تبوك", "حائل", "الحدود الشمالية", "جازان", "نجران", "الباحة", "الجوف",
-            ],
-        },
-        {
-            name: "rates",
-            type: "array",
-            required: true,
-            label: { ar: "أسعار الشحن", en: "Shipping Rates" },
-            fields: [
-                { name: "label", type: "text", localized: true, label: { ar: "الوصف (مثال: شحن عادي)", en: "Label" } },
-                { name: "minWeight", type: "number", defaultValue: 0, label: { ar: "الوزن الأدنى (كغ)", en: "Min Weight (kg)" } },
-                { name: "maxWeight", type: "number", label: { ar: "الوزن الأقصى (كغ)", en: "Max Weight (kg)" }, admin: { description: "اتركه فارغاً لعدم التحديد" } },
-                { name: "price", type: "number", required: true, label: { ar: "السعر (SAR)", en: "Price (SAR)" } },
-                { name: "estimatedDays", type: "text", label: { ar: "المدة المتوقعة", en: "Estimated Days" }, admin: { description: 'مثال: "2–3 أيام عمل"' } },
-            ],
-        },
-        {
-            name: "freeShippingThreshold",
-            type: "number",
-            min: 0,
-            label: { ar: "حد الشحن المجاني (SAR)", en: "Free Shipping Threshold (SAR)" },
-            admin: { description: "اتركه فارغاً لعدم تفعيل الشحن المجاني" },
-        },
-        {
-            name: "isActive",
-            type: "checkbox",
-            defaultValue: true,
-            label: { ar: "مفعّل", en: "Active" },
         },
     ],
 }
