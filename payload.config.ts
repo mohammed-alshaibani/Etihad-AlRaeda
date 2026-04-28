@@ -50,22 +50,22 @@ import { PaymentGateways } from "./payload/globals/PaymentGateways"
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Uses PostgreSQL (Supabase) in production, SQLite for local development or when DATABASE_URL is missing.
-const isBuild = process.env.NEXT_PHASE === "phase-production-build"
-const hasDbUrl = Boolean(process.env.DATABASE_URL)
+// Uses PostgreSQL (Supabase) in production, SQLite for local development or during Vercel build.
+const isVercelBuild = process.env.VERCEL === "1" &&
+  (process.env.NEXT_PHASE === "phase-production-build" || process.env.CI === "1")
 
-const dbAdapter = (!hasDbUrl || (process.env.NODE_ENV !== "production" && !isBuild))
+const dbAdapter = (isVercelBuild || !process.env.DATABASE_URL)
   ? sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || "file:./payload-build.db",
+      url: "file:./payload-build.db",
     },
-    push: false, // Don't push schema changes during build
+    push: true, // Create tables in the ephemeral build DB so queries don't crash
   })
   : postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL as string,
     },
-    push: true, // Automatically create tables in the new database
+    push: true, // Automatically create tables in the production DB on first run
   })
 
 export default buildConfig({
