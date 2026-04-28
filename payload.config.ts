@@ -65,6 +65,7 @@ const dbAdapter = (!hasDbUrl || (process.env.NODE_ENV !== "production" && !isBui
     pool: {
       connectionString: process.env.DATABASE_URL as string,
     },
+    push: true, // Automatically create tables in the new database
   })
 
 export default buildConfig({
