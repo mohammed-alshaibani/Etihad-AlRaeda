@@ -50,20 +50,20 @@ import { PaymentGateways } from "./payload/globals/PaymentGateways"
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// ─── Database Adapter ─────────────────────────────────────────────────────────
-// Uses PostgreSQL (Supabase) in production, SQLite for local development.
-const isDevelopment = process.env.NODE_ENV !== "production"
+// Uses PostgreSQL (Supabase) in production, SQLite for local development or when DATABASE_URL is missing.
+const isBuild = process.env.NEXT_PHASE === "phase-production-build"
+const hasDbUrl = Boolean(process.env.DATABASE_URL)
 
-const dbAdapter = isDevelopment
+const dbAdapter = (!hasDbUrl || (process.env.NODE_ENV !== "production" && !isBuild))
   ? sqliteAdapter({
     client: {
-      url: process.env.DATABASE_URL || "file:./payload.db",
+      url: process.env.DATABASE_URL || "file:./payload-build.db",
     },
-    push: true,
+    push: false, // Don't push schema changes during build
   })
   : postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL,
+      connectionString: process.env.DATABASE_URL as string,
     },
   })
 
