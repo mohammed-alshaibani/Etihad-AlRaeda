@@ -59,15 +59,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const payload = await getPayload({ config })
+  let navigation = null
+  let siteSettings = null
 
-  const navigation = await payload.findGlobal({
-    slug: "navigation",
-  }).catch(() => null)
+  try {
+    const payload = await getPayload({ config })
 
-  const siteSettings = await payload.findGlobal({
-    slug: "site-settings",
-  }).catch(() => null)
+    navigation = await payload.findGlobal({
+      slug: "navigation",
+    })
+
+    siteSettings = await payload.findGlobal({
+      slug: "site-settings",
+    })
+  } catch (error) {
+    console.error("Error initializing layout data:", error)
+  }
 
   return (
     <html
