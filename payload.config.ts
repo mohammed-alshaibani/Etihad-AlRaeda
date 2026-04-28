@@ -5,7 +5,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical"
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob"
 import path from "path"
 import { fileURLToPath } from "url"
-import { ar } from "@payloadcms/translations/languages/ar"
+import { ar } from "@payloadcms/translations/languages/ar/index.js"
 import sharp from "sharp"
 
 // ─── Collections ────────────────────────────────────────────────────────────
