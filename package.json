@@ -2,9 +2,10 @@
   "name": "my-project",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
-    "sync-db": "npx payload migrate:push --force",
+    "sync-db": "npx payload migrate",
     "build": "npm run sync-db && next build",
     "start": "next start",
     "lint": "eslint ."
@@ -86,5 +87,6 @@
   },
   "engines": {
     "node": "22.x"
-  }
+  },
+  "packageManager": "pnpm@9.15.4"
 }
