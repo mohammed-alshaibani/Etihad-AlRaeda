@@ -2,6 +2,7 @@ import { withPayload } from "@payloadcms/next/withPayload"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   experimental: {
     // Fix: Next.js 15 generates mismatched preload/stylesheet URLs for routes
     // with encoded special chars like [[...segments]] → %5B%5B...segments%5D%5D.

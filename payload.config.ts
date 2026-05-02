@@ -58,18 +58,20 @@ const dirname = path.dirname(filename)
 const databaseUrl = process.env.DATABASE_URL || "file:./payload.db"
 const isPostgres = databaseUrl.startsWith("postgres") || databaseUrl.startsWith("postgresql")
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const dbAdapter = isPostgres
   ? postgresAdapter({
     pool: {
       connectionString: databaseUrl,
     },
-    push: true, // Sync schema automatically
+    push: !isProduction, // Disable in production to prevent interactive Drizzle prompts
   })
   : sqliteAdapter({
     client: {
       url: databaseUrl,
     },
-    push: true,
+    push: false,
   })
 
 export default buildConfig({
@@ -165,7 +167,12 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || "CHANGE-ME-IN-PRODUCTION-VERY-LONG-SECRET",
   csrf: [
     process.env.SERVER_URL || 'http://localhost:3000',
-    'http://localhost:3001', // Keep as fallback
+    'https://etihad.sa',
+    'http://etihad.sa',
+    'https://www.etihad.sa',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
   ],
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),

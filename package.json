@@ -76,7 +76,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "@tailwindcss/postcss": "^4.2.0",
-    "@types/node": "^22",
+    "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8.5",
@@ -87,7 +87,7 @@
     "typescript": "5.7.3"
   },
   "engines": {
-    "node": "22.x"
+    "node": ">=20.0.0"
   },
   "packageManager": "pnpm@9.15.4"
 }

@@ -1,19 +1,43 @@
-const { createServer } = require('http')
-const { parse } = require('url')
-const next = require('next')
+const path = require('path');
+const fs = require('fs');
+const http = require('http');
 
-const dev = false // Always false for production
-const app = next({ dev })
-const handle = app.getRequestHandler()
+// official server.js for Next.js production
+const configPath = path.join(__dirname, '.next', 'required-server-files.json');
+const config = fs.existsSync(configPath) 
+  ? JSON.parse(fs.readFileSync(configPath, 'utf8'))
+  : { config: { distDir: '.next' } };
 
-const port = process.env.PORT || 3000
+const NextServer = require('next/dist/server/next-server').default;
 
-app.prepare().then(() => {
-  createServer((req, res) => {
-    const parsedUrl = parse(req.url, true)
-    handle(req, res, parsedUrl)
-  }).listen(port, (err) => {
-    if (err) throw err
-    console.log(`> Ready on http://localhost:${port}`)
-  })
-})
+const nextServer = new NextServer({
+  hostname: 'localhost',
+  port: process.env.PORT || 3000,
+  dir: __dirname,
+  dev: false,
+  customServer: false,
+  conf: config.config,
+});
+
+const handler = nextServer.getRequestHandler();
+
+const server = http.createServer(async (req, res) => {
+  try {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    
+    // 🛠️ FIX: Strip /admin/ from static asset requests
+    if (url.pathname.includes('/admin/_next/static/')) {
+        req.url = url.pathname.replace('/admin/_next/static/', '/_next/static/');
+    }
+
+    await handler(req, res);
+  } catch (err) {
+    console.error(err);
+    res.statusCode = 500;
+    res.end('internal server error');
+  }
+});
+
+server.listen(process.env.PORT || 3000, () => {
+  console.log('Server ready');
+});
